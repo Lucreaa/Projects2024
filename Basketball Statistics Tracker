@@ -1,0 +1,3244 @@
+from tkinter import *
+from tkinter import ttk
+from tkinter import messagebox
+import tkinter.font as font
+
+def DestroyFirst(previous_window): #subroutine that is made as a buffer to destroy the first menu, simply for navigation
+    previous_window.destroy() #uses a parameter variable
+
+    FirstMenu()
+    
+
+def ReturnSelect(previous_window): #subroutine to return the user to the team select menu while destroying their current window
+    previous_window.withdraw() #uses a parameter variable
+
+    TeamSelectMenu()
+    
+def DestroyTs(previous_window): #subroutine to destroy the team select window, simply for navigation
+    previous_window.destroy() #uses a parameter variable
+
+    CompareTeam()
+
+def DestroyTsa(previous_window): #subroutine to destroy the team select add window, simply for navigation
+    previous_window.withdraw() #uses a parameter variable
+
+    CompareTeamAdd()
+
+def FirstMenu(): #the main menu, allows users to create, delete or login to an accounnt
+    
+    firstwindow = Tk() #creation of the tkinter window
+    firstwindow.title("Main Menu")
+    firstwindow.geometry("550x650+{}+{}".format(firstwindow.winfo_x() + 600, firstwindow.winfo_y() + 200)) #defines the size of the window and places it in the middle of a users screen
+    firstwindow.configure(bg = "#CCCCCC") #sets the background of the window to a colour I have chosen, uses hex number
+    firstwindow.resizable(0,0) #the user is unable to alter the size of the window
+    frame = Frame(firstwindow, bg = "#856FF8", highlightbackground = "black", highlightthickness = 2, height = 150, width = 550) #places a frame ontop of the window, for aesthetic purpose to serve as a header
+    frame.place(x = 0, y = 0) #placing of the frame
+    
+    f = font.Font(size=20)
+    
+    header = Label(frame, text = "Basketball Statistics Tracker")
+    header["font"] = f
+    header.place(x = 100, y = 50)
+    header.configure(bg = "#856FF8") #previous 6 lines relate to the placement and design of the header within the frame
+
+    #ALL WINDOWS FOLLOW THE EXACT SAME LAYOUT, I WILL NOT BE COMMENTING THESE AS THEY ARE REPLICAS OF THIS WINDOW ABOVE JUST WITH CHANGES DEPENDANT ON NAME
+
+    
+    createbutton = Button(firstwindow,
+                          background = "#CCCCCC",
+                          foreground = "BLACK",
+                          activebackground = "#856FF8",
+                          highlightthickness = 2,
+                          highlightbackground = "#CCCCCC",
+                          highlightcolor = "WHITE",
+                          height = 2,
+                          width = 20,
+                          cursor = "hand1",
+                          text = "Create Account",
+                          command = lambda: CreateMenu(firstwindow))
+    createbutton.place(x = 190, y = 200)
+
+    #creation of a button that takes users to the create account menu
+    #all lines listed under the button are for the aesthetics of the button by declaring certain features
+    
+    playerlogin = Button(firstwindow,
+                         background = "#CCCCCC",
+                         foreground = "BLACK",
+                         activebackground = "#856FF8",
+                         highlightthickness = 2,
+                         highlightbackground = "#CCCCCC",
+                         highlightcolor = "WHITE",
+                         height = 2,
+                         width = 20,
+                         cursor = "hand1",
+                         text = "Player Login",
+                         command = lambda: PlayerLoginMenu(firstwindow))
+    playerlogin.place(x = 190, y = 300)
+
+    #creation of a button that takes users to the "player" login route
+    #all lines listed under the button are for the aesthetics of the button by declaring certain features
+    
+    fanlogin = Button(firstwindow,
+                      background = "#CCCCCC",
+                      foreground = "BLACK",
+                      activebackground = "#856FF8",
+                      highlightthickness = 2,
+                      highlightbackground = "#CCCCCC",
+                      highlightcolor = "WHITE",
+                      height = 2,
+                      width = 20,
+                      cursor = "hand1",
+                      text = "Fan Login", command = lambda: FanLoginMenu(firstwindow))
+    fanlogin.place(x = 190, y = 350)
+
+    #creation of a button that takes users to the "fan" login route
+    #all lines listed under the button are for the aesthetics of the button by declaring certain features
+    
+    coachlogin = Button(firstwindow,
+                        background = "#CCCCCC",
+                        foreground = "BLACK",
+                        activebackground = "#856FF8",
+                        highlightthickness = 2,
+                        highlightbackground = "#CCCCCC",
+                        highlightcolor = "WHITE",
+                        height = 2,
+                        width = 20,
+                        cursor = "hand1",
+                        text = "Coach Login", command = lambda: CoachLoginMenu(firstwindow))
+    coachlogin.place(x = 190, y = 400)
+
+    #creation of a button that takes users to the "coach" login route
+    #all lines listed under the button are for the aesthetics of the button by declaring certain features
+    
+    officiallogin = Button(firstwindow,
+                           background = "#CCCCCC",
+                           foreground = "BLACK",
+                           activebackground = "#856FF8",
+                           highlightthickness = 2,
+                           highlightbackground = "#CCCCCC",
+                           highlightcolor = "WHITE",
+                           height = 2,
+                           width = 20,
+                           cursor = "hand1",
+                           text = "Official Login", command = lambda: OfficialLoginMenu(firstwindow))
+    officiallogin.place(x = 190, y = 450)
+
+    #creation of a button that takes users to the "official" login route
+    #all lines listed under the button are for the aesthetics of the button by declaring certain features
+
+    deletelogin = Button(firstwindow,
+                         background = "#CCCCCC",
+                         foreground = "BLACK",
+                         activebackground = "#856FF8",
+                         highlightthickness = 2,
+                         highlightbackground = "#CCCCCC",
+                         highlightcolor = "WHITE",
+                         height = 2,
+                         width = 20,
+                         cursor = "hand1",
+                         text = "Delete Login",
+                         command = lambda: DeleteLoginMenu(firstwindow))
+    deletelogin.place(x = 190, y = 250)
+
+    #creation of a button that takes users to the delete a login page
+    #all lines listed under the button are for the aesthetics of the button by declaring certain features
+
+def DeleteLoginMenu(previous_window): #uses a parameter from the labda command to carry over the window as a variable into this subroutine
+    previous_window.destroy() #destroys the carried over window
+
+    def DeleteLogin(username, password, stakeholder): #the subroutine has a parameter of three items, these can be plugged in later in the programme and will be saved under these names
+        with open("LoginDetails.txt", "r") as f:
+            filelines = f.readlines()
+
+        found = False
+        with open("LoginDetails.txt", "w") as f:
+            for line in filelines:
+                if username in line and password in line and stakeholder in line:
+                    found = True #searches for all 3 items in the txt file, line by line
+                else:
+                    f.write(line) #if the three items are not in the list, the line is rewritten so that nothin is changed
+
+        if found:
+            messagebox.showinfo("Success", "Login has been deleted!") #message box for confirmation
+        else:
+            messagebox.showerror("Error", "Login not found.") #message box for error
+    
+    deletewindow = Tk()
+    deletewindow.title("Delete Account")
+    deletewindow.geometry("550x650+{}+{}".format(deletewindow.winfo_x() + 600, deletewindow.winfo_y() + 200))
+    deletewindow.configure(bg="#CCCCCC")
+    deletewindow.resizable(0, 0)
+
+    frame = Frame(deletewindow, bg="#856FF8", highlightbackground="black", highlightthickness=2, height=150,
+                  width=550)
+    frame.place(x=0, y=0)
+
+    f = font.Font(size=20)
+
+    header = Label(frame, text="Delete Account")
+    header["font"] = f
+    header.place(x=100, y=50)
+    header.configure(bg="#856FF8")
+
+
+    delete_user = Entry(deletewindow)
+    delete_user.place(x=215, y=200)
+    user_label = Label(deletewindow, text="Username:")
+    user_label.place(x=125, y=200)
+    user_label.configure(bg="#CCCCCC")
+
+    delete_pass = Entry(deletewindow, show="*")
+    delete_pass.place(x=215, y=220)
+    pass_label = Label(deletewindow, text="Password:")
+    pass_label.place(x=125, y=220)
+    pass_label.configure(bg="#CCCCCC")
+
+    stakeholder = ["Fan", "Coach", "Player", "Official"]
+    stakeholderdropdown = ttk.Combobox(deletewindow, value=stakeholder)
+    stakeholderdropdown.place(x=215, y=240)
+    stake_label = Label(deletewindow, text="Stakeholder:")
+    stake_label.place(x=125, y=240)
+    stake_label.configure(bg="#CCCCCC")
+
+    #three boxes (two entry and one drop down menu) that will be placed onto the root window that allow users to enter/select specific details
+
+    deletebutton = Button(deletewindow,
+                          background = "#CCCCCC",
+                          foreground = "BLACK",
+                          activebackground = "#856FF8",
+                          highlightthickness = 2,
+                          highlightbackground = "#CCCCCC",
+                          highlightcolor = "WHITE",
+                          height = 2,
+                          width = 20,
+                          cursor = "hand1",
+                          text="Delete Account",
+                          command=lambda: DeleteLogin(delete_user.get(), delete_pass.get(), stakeholderdropdown.get()))
+    deletebutton.place(x=190, y=280)
+
+    #creation of a button that takes users to the delete login subroutine where the calculation to delete a user is performed
+    #all lines listed under the button are for the aesthetics of the button by declaring certain features
+
+    homebutton = Button(deletewindow,
+                        background = "#CCCCCC",
+                        foreground = "BLACK",
+                        activebackground = "#856FF8",
+                        highlightthickness = 2,
+                        highlightbackground = "#CCCCCC",
+                        highlightcolor = "WHITE",
+                        height = 2,
+                        width = 20,
+                        cursor = "hand1",
+                        text="Return to Main Menu",
+                        command = lambda: DestroyFirst(deletewindow))
+    homebutton.place(x=190, y=320)
+
+    #creation of a button that takes users to the main menu
+    #all lines listed under the button are for the aesthetics of the button by declaring certain features
+
+def CreateMenu(previous_window): #saves window from lambda comand as a new variable
+    previous_window.destroy() #deletes window from lamda command
+    def LoginValidation(username, password, stakeholder): #validation with three catagories
+        if username == "":
+            messagebox.showerror("Error", "Ensure username and password have been entered") #presence check
+        elif password == "":
+            messagebox.showerror("Error", "Ensure username and password have been entered") #presence check
+        elif stakeholder != "Fan" and stakeholder != "Coach" and stakeholder != "Official" and stakeholder != "Player":
+            messagebox.showerror("Error", "Ensure you have chosen one of the login options") #presence check
+        else:
+            handle_create_account() #if the presence checks are valid, the next subroutine is run
+        
+    def handle_create_account():
+        username = create_user.get() #saves all three catagories as variables
+        password = create_pass.get()
+        encrypted_password = EncryptPass(password)
+        stakeholder = stakeholderdropdown.get()
+        SaveLogin(username, encrypted_password, stakeholder) #runs the subroutine that saves these to a txt file
+        messagebox.showinfo("Success","Account has been added! Please return to login menu and select the proper login route!") #message box for confirmation
+
+    createwindow = Tk()
+    createwindow.title("Create Account")
+    createwindow.geometry("550x650+{}+{}".format(createwindow.winfo_x() + 600, createwindow.winfo_y() + 200))
+    createwindow.configure(bg="#CCCCCC")
+    createwindow.resizable(0, 0)
+
+    frame = Frame(createwindow, bg="#856FF8", highlightbackground="black", highlightthickness=2, height=150,
+                  width=550)
+    frame.place(x=0, y=0)
+
+    f = font.Font(size=20)
+
+    header = Label(frame, text="Create Account")
+    header["font"] = f
+    header.place(x=100, y=50)
+    header.configure(bg="#856FF8")
+
+
+    global create_user #global as it can be called in the handle_create_account subroutine
+    create_user = Entry(createwindow)
+    create_user.place(x=215, y=200)
+    user_label = Label(createwindow, text="Username:")
+    user_label.place(x=125, y=200)
+    user_label.configure(bg="#CCCCCC")
+
+    global create_pass #global as it can be called in the handle_create_account subroutine
+    create_pass = Entry(createwindow, show="*")
+    create_pass.place(x=215, y=220)
+    pass_label = Label(createwindow, text="Password:")
+    pass_label.place(x=125, y=220)
+    pass_label.configure(bg="#CCCCCC")
+
+    global stakeholderdropdown #global as it can be called in the handle_create_account subroutine
+    stakeholder = ["Fan", "Coach", "Player", "Official"]
+    stakeholderdropdown = ttk.Combobox(createwindow, value=stakeholder)
+    stakeholderdropdown.place(x=215, y=240)
+    stake_label = Label(createwindow, text="Stakeholder:")
+    stake_label.place(x=125, y=240)
+    stake_label.configure(bg="#CCCCCC")
+
+    createbutton = Button(createwindow,
+                        background = "#CCCCCC",
+                        foreground = "BLACK",
+                        activebackground = "#856FF8",
+                        highlightthickness = 2,
+                        highlightbackground = "#CCCCCC",
+                        highlightcolor = "WHITE",
+                        height = 2,
+                        width = 20,
+                        cursor = "hand1",
+                          text="Create Account",
+                          command=lambda: LoginValidation(create_user.get(), create_pass.get(), stakeholderdropdown.get()))
+    createbutton.place(x=190, y=280)
+
+    #creation of a button that validates the login to be saved
+    #all lines listed under the button are for the aesthetics of the button by declaring certain features
+
+    homebutton = Button(createwindow,
+                        background = "#CCCCCC",
+                        foreground = "BLACK",
+                        activebackground = "#856FF8",
+                        highlightthickness = 2,
+                        highlightbackground = "#CCCCCC",
+                        highlightcolor = "WHITE",
+                        height = 2,
+                        width = 20,
+                        cursor = "hand1",
+                        text="Return to Main Menu",
+                        command = lambda: DestroyFirst(createwindow))
+    homebutton.place(x=190, y=320)
+
+    #creation of a button that takes users to the main menu
+    #all lines listed under the button are for the aesthetics of the button by declaring certain features
+
+def EncryptPass(plain_message):
+    shift = -15 #setting the shift (caeser cypher)
+
+    regularpass = plain_message #saves the password from the parameter
+
+    encryption = "" #sets current encrypted password to blank
+
+    for i in regularpass: #loops character by character
+
+        unicode = ord(i) #gets the characters unicaode value
+
+        index = ord(i) - ord("A")
+
+        new_index = (index + shift) #updates the character with the shift set previously
+
+        new_unicode = new_index + ord("A")
+
+        new_character = chr(new_unicode) #reverts the character back from new unicode value
+
+        encryption = encryption + new_character #updates blank encryption character by character to get new password
+
+    return encryption #returns the value of encryption to be used elsewhere
+    
+
+def SaveLogin(saveuser, savepass, savestake):
+
+    file = open("LoginDetails.txt","a") #opens the login file to be updated
+
+    file.write(saveuser)
+    file.write("|")
+    file.write(savepass)
+    file.write("|")
+    file.write(savestake + "\n")
+    file.close()
+
+    #saves the users details to the file in the correct format
+
+def FanLoginMenu(previous_window):
+    previous_window.destroy()
+    def check_login():
+        username = username_box.get()
+        password = password_box.get()
+
+        if username.strip() == "" or password.strip() == "":
+            messagebox.showerror("Error", "Please ensure both username and password have been entered!")
+            return
+
+        #validation (presence check) for login details of fans
+        
+        encrypted_password = EncryptPass(password)
+        stakeholder = "Fan"
+        allowlogin = False
+        with open("LoginDetails.txt", "r") as file:
+            for line in file:
+                line = line.strip()
+                if stakeholder in line and username in line and encrypted_password in line:
+                    allowlogin = True
+                    break
+                #checks that all three criteria for login are correct
+
+        if allowlogin:
+            global officiallogin
+            global coachlogin
+            global playerlogin
+            global fanlogin
+            officiallogin = False
+            coachlogin = False
+            playerlogin = False
+            fanlogin = True
+            TeamSelectMenu()
+        else:
+            WrongLogin()
+
+        #sets the specific login route to true so that individual features can appear
+
+    global floginwindow
+    floginwindow = Tk()
+    floginwindow.title("Fan Login Menu")
+    floginwindow.geometry("550x650+{}+{}".format(floginwindow.winfo_x() + 600, floginwindow.winfo_y() + 200))
+    floginwindow.configure(bg = "#CCCCCC")
+    floginwindow.resizable(0,0)
+
+    frame = Frame(floginwindow, bg = "#856FF8", highlightbackground = "black", highlightthickness = 2, height = 150, width = 550)
+    frame.place(x = 0, y = 0)
+
+    f = font.Font(size=20)
+    
+    header = Label(frame, text = "Fan Login Menu")
+    header["font"] = f
+    header.place(x = 100, y = 50)
+    header.configure(bg = "#856FF8")
+
+
+
+    username_box = Entry(floginwindow)
+    username_box.place(x = 215, y = 200)
+    user_label = Label(floginwindow, text = "Username:")
+    user_label.place(x = 125, y = 200)
+    user_label.configure(bg = "#CCCCCC")
+
+    password_box = Entry(floginwindow, show = "*")
+    password_box.place(x = 215, y = 220)
+    pass_label = Label(floginwindow, text = "Password:")
+    pass_label.place(x = 125, y = 220)
+    pass_label.configure(bg = "#CCCCCC")
+
+    #creation of entry boxes for username and password
+
+    homebutton = Button(floginwindow,
+                        background = "#CCCCCC",
+                        foreground = "BLACK",
+                        activebackground = "#856FF8",
+                        highlightthickness = 2,
+                        highlightbackground = "#CCCCCC",
+                        highlightcolor = "WHITE",
+                        height = 2,
+                        width = 20,
+                        cursor = "hand1",
+                        text="Return to Main Menu", command = lambda: DestroyFirst(floginwindow))
+    homebutton.place(x=190, y=320)
+
+    #button to return the user to the homepage
+
+    createbutton = Button(floginwindow,
+                          background = "#CCCCCC",
+                        foreground = "BLACK",
+                        activebackground = "#856FF8",
+                        highlightthickness = 2,
+                        highlightbackground = "#CCCCCC",
+                        highlightcolor = "WHITE",
+                        height = 2,
+                        width = 20,
+                        cursor = "hand1",
+                          text="Login", command=check_login)
+    createbutton.place(x=190, y=280)
+
+    #button to check a users login
+    
+    
+#--------------------------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------------------
+    
+def CoachLoginMenu(previous_window):
+    previous_window.destroy()
+    def check_login():
+        username = username_box.get()
+        password = password_box.get()
+
+        if username.strip() == "" or password.strip() == "":
+            messagebox.showerror("Error", "Please ensure both username and password have been entered!")
+            return
+        
+        encrypted_password = EncryptPass(password)
+        stakeholder = "Coach"
+        allowlogin = False
+        with open("LoginDetails.txt", "r") as file:
+            for line in file:
+                line = line.strip()
+                if stakeholder in line and username in line and encrypted_password in line:
+                    allowlogin = True
+                    break
+
+        if allowlogin:
+            global officiallogin
+            global coachlogin
+            global playerlogin
+            global fanlogin
+            officiallogin = False
+            coachlogin = True
+            playerlogin = False
+            fanlogin = False
+            TeamSelectMenu()
+        else:
+            WrongLogin()
+
+    global cloginwindow
+    cloginwindow = Tk()
+    cloginwindow.title("Coach Login Menu")
+    cloginwindow.geometry("550x650+{}+{}".format(cloginwindow.winfo_x() + 600, cloginwindow.winfo_y() + 200))
+    cloginwindow.configure(bg = "#CCCCCC")
+    cloginwindow.resizable(0,0)
+
+    frame = Frame(cloginwindow, bg = "#856FF8", highlightbackground = "black", highlightthickness = 2, height = 150, width = 550)
+    frame.place(x = 0, y = 0)
+
+    f = font.Font(size=20)
+    
+    header = Label(frame, text = "Coach Login Menu")
+    header["font"] = f
+    header.place(x = 100, y = 50)
+    header.configure(bg = "#856FF8")
+
+    username_box = Entry(cloginwindow)
+    username_box.place(x = 215, y = 200)
+    user_label = Label(cloginwindow, text = "Username:")
+    user_label.place(x = 125, y = 200)
+    user_label.configure(bg = "#CCCCCC")
+
+    password_box = Entry(cloginwindow, show = "*")
+    password_box.place(x = 215, y = 220)
+    pass_label = Label(cloginwindow, text = "Password:")
+    pass_label.place(x = 125, y = 220)
+    pass_label.configure(bg = "#CCCCCC")
+
+    homebutton = Button(cloginwindow,
+                        background = "#CCCCCC",
+                        foreground = "BLACK",
+                        activebackground = "#856FF8",
+                        highlightthickness = 2,
+                        highlightbackground = "#CCCCCC",
+                        highlightcolor = "WHITE",
+                        height = 2,
+                        width = 20,
+                        cursor = "hand1",
+                        text="Return to Main Menu", command = lambda: DestroyFirst(cloginwindow))
+    homebutton.place(x=190, y=320)
+
+    createbutton = Button(cloginwindow,
+                          background = "#CCCCCC",
+                        foreground = "BLACK",
+                        activebackground = "#856FF8",
+                        highlightthickness = 2,
+                        highlightbackground = "#CCCCCC",
+                        highlightcolor = "WHITE",
+                        height = 2,
+                        width = 20,
+                        cursor = "hand1",
+                          text="Login", command=check_login)
+    createbutton.place(x=190, y=280)
+
+    #ALL FEATURES OF COACH LOGIN ARE EXACT SAME AS FAN JUST WITH A CHANGE TO WHAT LOGIN ROUTE IS SET TO TRUE
+
+#--------------------------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------------------
+    
+def OfficialLoginMenu(previous_window):
+    previous_window.destroy()
+    def check_login():
+        username = username_box.get()
+        password = password_box.get()
+
+        if username.strip() == "" or password.strip() == "":
+            messagebox.showerror("Error", "Please ensure both username and password have been entered!")
+            return
+
+        encrypted_password = EncryptPass(password)
+        stakeholder = "Official"
+        allowlogin = False
+        with open("LoginDetails.txt", "r") as file:
+            for line in file:
+                line = line.strip()
+                if stakeholder in line and username in line and encrypted_password in line:
+                    allowlogin = True
+                    break
+
+        if allowlogin:
+            global officiallogin
+            global coachlogin
+            global playerlogin
+            global fanlogin
+            officiallogin = True
+            coachlogin = False
+            playerlogin = False
+            fanlogin = False
+            TeamSelectMenu()
+        else:
+            WrongLogin()
+
+    global ologinwindow
+    ologinwindow = Tk()
+    ologinwindow.title("Official Login Menu")
+    ologinwindow.geometry("550x650+{}+{}".format(ologinwindow.winfo_x() + 600, ologinwindow.winfo_y() + 200))
+    ologinwindow.configure(bg = "#CCCCCC")
+    ologinwindow.resizable(0,0)
+
+    frame = Frame(ologinwindow, bg = "#856FF8", highlightbackground = "black", highlightthickness = 2, height = 150, width = 550)
+    frame.place(x = 0, y = 0)
+
+    f = font.Font(size=20)
+    
+    header = Label(frame, text = "Official Login Menu")
+    header["font"] = f
+    header.place(x = 100, y = 50)
+    header.configure(bg = "#856FF8")
+
+    username_box = Entry(ologinwindow)
+    username_box.place(x = 215, y = 200)
+    user_label = Label(ologinwindow, text = "Username:")
+    user_label.place(x = 125, y = 200)
+    user_label.configure(bg = "#CCCCCC")
+
+    password_box = Entry(ologinwindow, show = "*")
+    password_box.place(x = 215, y = 220)
+    pass_label = Label(ologinwindow, text = "Password:")
+    pass_label.place(x = 125, y = 220)
+    pass_label.configure(bg = "#CCCCCC")
+
+    homebutton = Button(ologinwindow,
+                        background = "#CCCCCC",
+                        foreground = "BLACK",
+                        activebackground = "#856FF8",
+                        highlightthickness = 2,
+                        highlightbackground = "#CCCCCC",
+                        highlightcolor = "WHITE",
+                        height = 2,
+                        width = 20,
+                        cursor = "hand1",
+                        text="Return to Main Menu", command = lambda: DestroyFirst(ologinwindow))
+    homebutton.place(x=190, y=320)
+
+    createbutton = Button(ologinwindow,
+                          background = "#CCCCCC",
+                        foreground = "BLACK",
+                        activebackground = "#856FF8",
+                        highlightthickness = 2,
+                        highlightbackground = "#CCCCCC",
+                        highlightcolor = "WHITE",
+                        height = 2,
+                        width = 20,
+                        cursor = "hand1",
+                          text="Login", command=check_login)
+    createbutton.place(x=190, y=280)
+
+    #ALL FEATURES OF OFFICIAL LOGIN ARE EXACT SAME AS FAN JUST WITH A CHANGE TO WHAT LOGIN ROUTE IS SET TO TRUE
+
+#--------------------------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------------------
+    
+def PlayerLoginMenu(previous_window):
+    previous_window.destroy()
+    def check_login():
+        username = username_box.get()
+        password = password_box.get()
+
+        if username.strip() == "" or password.strip() == "":
+            messagebox.showerror("Error", "Please ensure both username and password have been entered!")
+            return
+
+        encrypted_password = EncryptPass(password)
+        stakeholder = "Player"
+        allowlogin = False
+        with open("LoginDetails.txt", "r") as file:
+            for line in file:
+                line = line.strip()
+                if stakeholder in line and username in line and encrypted_password in line:
+                    allowlogin = True
+                    break
+
+        if allowlogin:
+            global officiallogin
+            global coachlogin
+            global playerlogin
+            global fanlogin
+            officiallogin = False
+            coachlogin = False
+            playerlogin = True
+            fanlogin = False
+            TeamSelectMenu()
+        else:
+            WrongLogin()
+
+    global ploginwindow
+    ploginwindow = Tk()
+    ploginwindow.title("Player Login Menu")
+    ploginwindow.geometry("550x650+{}+{}".format(ploginwindow.winfo_x() + 600, ploginwindow.winfo_y() + 200))
+    ploginwindow.configure(bg = "#CCCCCC")
+    ploginwindow.resizable(0,0)
+
+    frame = Frame(ploginwindow, bg = "#856FF8", highlightbackground = "black", highlightthickness = 2, height = 150, width = 550)
+    frame.place(x = 0, y = 0)
+
+    f = font.Font(size=20)
+    
+    header = Label(frame, text = "Player Login Menu")
+    header["font"] = f
+    header.place(x = 100, y = 50)
+    header.configure(bg = "#856FF8")
+
+    username_box = Entry(ploginwindow)
+    username_box.place(x = 215, y = 200)
+    user_label = Label(ploginwindow, text = "Username:")
+    user_label.place(x = 125, y = 200)
+    user_label.configure(bg = "#CCCCCC")
+
+    password_box = Entry(ploginwindow, show = "*")
+    password_box.place(x = 215, y = 220)
+    pass_label = Label(ploginwindow, text = "Password:")
+    pass_label.place(x = 125, y = 220)
+    pass_label.configure(bg = "#CCCCCC")
+
+    homebutton = Button(ploginwindow,
+                        background = "#CCCCCC",
+                        foreground = "BLACK",
+                        activebackground = "#856FF8",
+                        highlightthickness = 2,
+                        highlightbackground = "#CCCCCC",
+                        highlightcolor = "WHITE",
+                        height = 2,
+                        width = 20,
+                        cursor = "hand1",
+                        text="Return to Main Menu", command = lambda: DestroyFirst(ploginwindow))
+    homebutton.place(x=190, y=320)
+
+    createbutton = Button(ploginwindow,
+                          background = "#CCCCCC",
+                        foreground = "BLACK",
+                        activebackground = "#856FF8",
+                        highlightthickness = 2,
+                        highlightbackground = "#CCCCCC",
+                        highlightcolor = "WHITE",
+                        height = 2,
+                        width = 20,
+                        cursor = "hand1",
+                          text="Login", command=check_login)
+    createbutton.place(x=190, y=280)
+
+    #ALL FEATURES OF PLAYER LOGIN ARE EXACT SAME AS FAN JUST WITH A CHANGE TO WHAT LOGIN ROUTE IS SET TO TRUE
+
+#--------------------------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------------------
+
+def TeamSelectMenu():
+    if playerlogin == True:
+        ploginwindow.withdraw()
+        
+    elif coachlogin == True:
+        cloginwindow.withdraw()
+
+    elif fanlogin == True:
+        floginwindow.withdraw()
+
+    elif officiallogin == True:
+        ologinwindow.withdraw()
+
+    #deletes whichever login route window was opened based upon which login route is true
+    
+    global tswindow
+    tswindow = Tk()
+    tswindow.title("Team Select")
+    tswindow.geometry("550x650+{}+{}".format(tswindow.winfo_x() + 600, tswindow.winfo_y() + 200))
+    tswindow.configure(bg = "#CCCCCC")
+    tswindow.resizable(0,0)
+    frame = Frame(tswindow, bg = "#856FF8", highlightbackground = "black", highlightthickness = 2, height = 150, width = 550)
+    frame.place(x = 0, y = 0)
+    
+    f = font.Font(size=20)
+    
+    header = Label(frame, text = "Team Select Menu")
+    header["font"] = f
+    header.place(x = 100, y = 50)
+    header.configure(bg = "#856FF8")
+
+
+    global teamselectdropdown
+    teamselect = ["Vale Vipers", "Cardiff Archers", "Ponty Panthers", "Tribal Hunters", "Caerphilly Cobras", "Saints", "Bristol Flyers", "Sapat Lang"]
+    teamselectdropdown = ttk.Combobox(tswindow, value=teamselect)
+    teamselectdropdown.place(x=215, y=240)
+    ts_label = Label(tswindow, text="Select a team:")
+    ts_label.place(x=125, y=240)
+    ts_label.configure(bg="#CCCCCC")
+
+    tsbutton = Button(tswindow,
+                      background = "#CCCCCC",
+                        foreground = "BLACK",
+                        activebackground = "#856FF8",
+                        highlightthickness = 2,
+                        highlightbackground = "#CCCCCC",
+                        highlightcolor = "WHITE",
+                        height = 2,
+                        width = 20,
+                        cursor = "hand1",
+                      text="Confirm", command=ValidateTeamSelect)
+    tsbutton.place(x=190, y=300)
+
+    #button to direct users to validation of team select
+
+    homebutton = Button(tswindow,
+                        background = "#CCCCCC",
+                        foreground = "BLACK",
+                        activebackground = "#856FF8",
+                        highlightthickness = 2,
+                        highlightbackground = "#CCCCCC",
+                        highlightcolor = "WHITE",
+                        height = 2,
+                        width = 20,
+                        cursor = "hand1",
+                        text="Return to Main Menu", command = lambda: DestroyFirst(tswindow))
+    homebutton.place(x=190, y=350)
+
+    #button to take users back to home page
+
+    if coachlogin == True:
+        CoachPlayerAppendButton()
+
+    if officiallogin == True:
+        AppendStatsButton()
+
+    #adds certain admin functions based upon which login is chosen
+
+#--------------------------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------------------
+
+def ValidateTeamSelectAdd():
+    presence = addteamdropdown.get() #recalls drop down info from last menu
+    
+    teams = ["Vale Vipers", "Cardiff Archers", "Saints", "Caerphilly Cobras", "Ponty Panthers", "Tribal Hunters", "Bristol Flyers", "Sapat Lang"] #all the teams that are in the drop down box
+    
+    if presence == "": #presence check for null data
+        messagebox.showerror("Error","Please select a team")
+    elif presence in teams:
+        CompareTeamAdd() #runs to next menu
+    else:
+        messagebox.showerror("Error","Please select one of the options") #else condition for validation (if someone changes the data in the entry box)
+
+def ValidateTeamSelect():
+    presence = teamselectdropdown.get()
+
+    teams = ["Vale Vipers", "Cardiff Archers", "Saints", "Caerphilly Cobras", "Ponty Panthers", "Tribal Hunters", "Bristol Flyers", "Sapat Lang"]
+    
+    if presence.strip() == "":
+        messagebox.showerror("Error","Please select a team")
+    elif presence.strip() not in teams:
+        messagebox.showerror("Error","Please select one of the options")
+    else:
+        CompareTeam()
+
+#presence checks same as that in previous subroutine
+
+def ValidatePlayerSelect():
+    presence = playerdropdown.get()
+
+    names = [] #initialises a blank list
+
+    with open("PlayerList.txt","r") as file:
+        for line in file:
+            linesplit=line.split("|") #splits the string at |
+            name = linesplit[1] #gathers only the players name from txt 
+            names.append(name) #adds player name to list
+    
+    if presence.strip() == "":
+        messagebox.showerror("Error","Please select a player") #presence check for null
+    elif presence.strip() not in names:
+        messagebox.showerror("Error","Player not recognised") #check for invalid data
+    else:
+        with open("PlayerList.txt", "r") as f:
+            filelines = f.readlines()
+            for line in filelines:
+                if presence in line:
+                    linesplit = line.split("|")
+                    playerid = linesplit[0]
+                    playername = linesplit[1]
+                    stakeholder = linesplit[2]
+
+                    #splits the string into multiple sections
+        teams = {
+            "Vale Vipers": ValeStats,
+            "Cardiff Archers": ArcherStats,
+            "Saints": SaintStats,
+            "Caerphilly Cobras": CobraStats,
+            "Ponty Panthers": PontyStats,
+            "Tribal Hunters": TribalStats,
+            "Bristol Flyers": BristolStats,
+            "Sapat Lang": SapatStats
+        }
+
+        #dictionary that routes user to menu based from choice
+        
+        selected_function = teams.get(linesplit[2].strip())
+        if selected_function:
+            selected_function() #runs the selected function based from the value in teams
+
+
+def CompareTeamStats():
+    entryinfo = teamselectdropdown.get()
+    
+    teams = {
+        "Vale Vipers": ValePlayers,
+        "Cardiff Archers": ArchersPlayers,
+        "Saints": SaintsPlayers,
+        "Caerphilly Cobras": CobrasPlayers,
+        "Ponty Panthers": PontyPlayers,
+        "Tribal Hunters": TribalPlayers,
+        "Bristol Flyers": BristolPlayers,
+        "Sapat Lang": SapatPlayers
+    }
+
+    #dictionary that routes user to menu based from choice
+    
+    selected_function = teams.get(entryinfo)
+    if selected_function:
+        selected_function() #runs the selected function based from the value in teams
+
+
+def CompareTeam():
+    entryinfo = teamselectdropdown.get()
+    
+    teams = {
+        "Vale Vipers": ValePlayers,
+        "Cardiff Archers": ArchersPlayers,
+        "Saints": SaintsPlayers,
+        "Caerphilly Cobras": CobrasPlayers,
+        "Ponty Panthers": PontyPlayers,
+        "Tribal Hunters": TribalPlayers,
+        "Bristol Flyers": BristolPlayers,
+        "Sapat Lang": SapatPlayers
+    }
+
+    #dictionary that routes user to menu based from choice
+    
+    selected_function = teams.get(entryinfo)
+    if selected_function:
+        selected_function() #runs the selected function based from the value in teams
+
+
+def AppendAddChoice(previous_window):
+    if coachlogin == True:
+        previous_window.withdraw()
+        AddPlayer()
+        
+    elif officiallogin == True:
+        previous_window.withdraw()
+        AppendStats()
+
+#these two subroutines add the additional button to the menu depending on which login route is selected (coach / official)
+        
+#--------------------------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------------------
+
+def CoachPlayerAppendButton():
+    cpabutton = Button(tswindow,
+                       background = "#CCCCCC",
+                        foreground = "BLACK",
+                        activebackground = "#856FF8",
+                        highlightthickness = 2,
+                        highlightbackground = "#CCCCCC",
+                        highlightcolor = "WHITE",
+                        height = 2,
+                        width = 20,
+                        cursor = "hand1",
+                       text="AddPlayer", command = lambda: AppendAddChoice(tswindow))
+    cpabutton.place(x=190, y=400)
+
+def AppendStatsButton():
+    cpabutton = Button(tswindow,
+                       background = "#CCCCCC",
+                        foreground = "BLACK",
+                        activebackground = "#856FF8",
+                        highlightthickness = 2,
+                        highlightbackground = "#CCCCCC",
+                        highlightcolor = "WHITE",
+                        height = 2,
+                        width = 20,
+                        cursor = "hand1",
+                       text="AppendStats", command = lambda: AppendAddChoice(tswindow))
+    cpabutton.place(x=190, y=400)
+
+
+#these two subroutines add the buttons to the physical menus
+
+#--------------------------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------------------
+
+def AddPlayer():
+    addwindow = Tk()
+    addwindow.title("Add a Player:")
+    addwindow.geometry("550x650+{}+{}".format(addwindow.winfo_x() + 600, addwindow.winfo_y() + 200))
+    addwindow.configure(bg = "#CCCCCC")
+    addwindow.resizable(0,0)
+    frame = Frame(addwindow, bg = "#856FF8", highlightbackground = "black", highlightthickness = 2, height = 150, width = 550)
+    frame.place(x = 0, y = 0)
+    
+    f = font.Font(size=20)
+    
+    header = Label(frame, text = "Add a Player")
+    header["font"] = f
+    header.place(x = 100, y = 50)
+    header.configure(bg = "#856FF8")
+
+    global addteamdropdown
+    teamselect = ["Vale Vipers", "Cardiff Archers", "Ponty Panthers", "Tribal Hunters", "Caerphilly Cobras", "Saints", "Bristol Flyers", "Sapat Lang"]
+    addteamdropdown = ttk.Combobox(addwindow, value=teamselect)
+    addteamdropdown.place(x=215, y=240)
+    add_label = Label(addwindow, text="Select a team:")
+    add_label.place(x=125, y=240)
+    add_label.configure(bg="#CCCCCC")
+
+    #creation of a combo box that inclides all team names
+
+    nextbutton = Button(addwindow,
+                        background = "#CCCCCC",
+                        foreground = "BLACK",
+                        activebackground = "#856FF8",
+                        highlightthickness = 2,
+                        highlightbackground = "#CCCCCC",
+                        highlightcolor = "WHITE",
+                        height = 2,
+                        width = 20,
+                        cursor = "hand1",
+                        text="Next", command = ValidateTeamSelectAdd)
+    nextbutton.place(x=215, y=280)
+
+    homebutton = Button(addwindow,
+                        background = "#CCCCCC",
+                        foreground = "BLACK",
+                        activebackground = "#856FF8",
+                        highlightthickness = 2,
+                        highlightbackground = "#CCCCCC",
+                        highlightcolor = "WHITE",
+                        height = 2,
+                        width = 20,
+                        cursor = "hand1",
+                        text="Return to Team Select", command = lambda: ReturnSelect(addwindow))
+    homebutton.place(x=215, y=320)
+
+    #two buttons, one to return to home and one to progress to next page
+
+#--------------------------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------------------
+
+def CompareTeamAdd():
+    entryinfo = addteamdropdown.get()
+    
+    teams = {
+        "Vale Vipers": ValePlayersAdd,
+        "Cardiff Archers": ArchersPlayersAdd,
+        "Saints": SaintsPlayersAdd,
+        "Caerphilly Cobras": CobrasPlayersAdd,
+        "Ponty Panthers": PontyPlayersAdd,
+        "Tribal Hunters": TribalPlayersAdd,
+        "Bristol Flyers": BristolPlayersAdd,
+        "Sapat Lang": SapatPlayersAdd
+    }
+
+    #dictionary with links to each new subroutine based from resulty of entry info
+    
+    selected_function = teams.get(entryinfo)
+    if selected_function:
+        selected_function() #runs the selected function
+
+#--------------------------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------------------
+def AddPlayerCalc(player): 
+
+    addedplayer = player #saves parameter as new variable
+    
+    with open("PlayerList.txt", 'r') as f:
+        filelines = f.readlines()
+        if filelines:
+            lastline = filelines[-1] #finds last line
+            lastlinesplit = lastline.split("|")
+            playerid = int(lastlinesplit[0])
+            name = lastlinesplit[1]
+            team = lastlinesplit[2] #splits the string from txt file into 3 sections 
+            newplayerid = playerid + 1 #creates new playerid (autonumber)
+            tempnewplayerid = str(newplayerid)
+            if len(tempnewplayerid) == 1:
+                fullplayerid = "00" + tempnewplayerid #if there is 1 digit in the player id, two 0 are added
+            elif len(tempnewplayerid) == 2:
+                fullplayerid = "0" + tempnewplayerid #if there is 2 digits in the player id, 1 0 is added
+            else:
+                fullplayerid = tempnewplayerid #else keep the current player id
+        else:
+            print("The file is empty") #this is an else condition for if there is a bug with the file
+
+    with open("PlayerStats.txt", 'r') as f:
+        filelines = f.readlines()
+        if filelines:
+            lastline = filelines[-1] #finds last line
+            statsid = int(lastlinesplit[0])
+            newstatsid = statsid + 1  #increment after conversion to integer
+            tempnewstatsid = str(newstatsid)
+            if len(tempnewstatsid) == 1:
+                fullstatsid = "910" + tempnewstatsid 
+            elif len(tempnewstatsid) == 2:
+                fullstatsid = "91" + tempnewstatsid
+            else:
+                fullstatsid = tempnewstatsid 
+        else:
+            print("The file is empty")
+
+            #everything above is same as for player list just with different values for the id
+
+    if addedplayer == "":
+        messagebox.showerror("Error","Please enter a player name!") #preence check for null data
+    elif any(char.isdigit() for char in addedplayer):
+        messagebox.showerror("Error", "Please do not enter numbers for a player's name!") #type check for integer being entered 
+    else:
+        with open("PlayerList.txt", "a") as file:
+            file.write(fullplayerid)
+            file.write("|")
+            file.write(addedplayer)
+            file.write("|")
+            file.write(addteamdropdown.get() + "\n") #writes a new line to text file with all player details, /n writes a new line for formatting of database
+
+        with open("PlayerStats.txt", "a") as file:
+            file.write(fullstatsid)
+            file.write("|")
+            file.write(fullplayerid)
+            file.write("|")
+            file.write("0")
+            file.write("|")
+            file.write("0")
+            file.write("|")
+            file.write("0")
+            file.write("|")
+            file.write("0")
+            file.write("|")
+            file.write("0")
+            file.write("|")
+            file.write("0")
+            file.write("|")
+            file.write("0" + "\n")
+
+            messagebox.showinfo("Success", "Player added!")
+
+            #same thing as before just for the player stats, all stats intially are 0 since a player has not played a game yet
+            
+
+#--------------------------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------------------
+
+def AppendStats():
+    def ValidateStats():
+        global validppgentry, validrpgentry, validapgentry, validthreepmentry, validthreeppentry, validtoentry
+        
+        validppgentry = newppgentry.get()
+        validrpgentry = newrpgentry.get()
+        validapgentry = newapgentry.get()
+        validthreepmentry = newthreepmentry.get()
+        validthreeppentry = newthreeppentry.get()
+        validtoentry = newtoentry.get()
+
+        while any(entry == "" for entry in [validppgentry, validrpgentry, validapgentry, validthreepmentry, validthreeppentry, validtoentry]):
+            messagebox.showerror("Error", "Please enter all fields!")  # presence check for null data
+            return  # add return here to exit the function if validation fails
+
+        while any(entry.isalpha() for entry in [validppgentry, validrpgentry, validapgentry, validthreepmentry, validthreeppentry, validtoentry]):
+            messagebox.showerror("Error", "Please only enter numbers!")  # type check for integers entered
+            return  # add return here to exit the function if validation fails
+        
+        PlayerName()
+
+    def PlayerName():
+        global playername
+        playername = appendplayerdropdown.get()
+
+        with open("PlayerList.txt", "r") as f:
+            filelines = f.readlines()
+            for line in filelines:
+                if playername in line:
+                    linesplit = line.split("|")
+                    global playerid
+                    playerid = linesplit[0]
+
+        with open("PlayerStats.txt", 'r') as f:
+            filelines = f.readlines()
+            for line in filelines:
+                if playerid in line:
+                    line_split = line.split("|")
+                    currentppg = float(line_split[2])
+                    currentrpg = float(line_split[3])
+                    currentapg = float(line_split[4])
+                    currentthreepm = float(line_split[5])
+                    currentthreepp = float(line_split[6])
+                    currentto = float(line_split[7])
+
+        with open("PlayerStats.txt", 'r') as f:
+            filelines = f.readlines()
+            updated_filelines = []  # initialize a list to hold updated lines
+            for line in filelines:
+                if playerid in line:
+                    temp_line_split = line.split("|")
+                    
+                    oldcounter = int(temp_line_split[8])
+                    counter = oldcounter+1
+                    newcounter = str(counter)
+                    temp_line_split[8] = newcounter
+                    
+                    ppgentry = int(newppgentry.get())
+                    rpgentry = int(newrpgentry.get())
+                    apgentry = int(newapgentry.get())
+                    threepmentry = int(newthreepmentry.get())
+                    threeppentry = int(newthreeppentry.get())
+                    toentry = int(newtoentry.get())
+                    
+                    newppg = ((currentppg * oldcounter) + ppgentry)/(oldcounter+1)
+                    printppg = round(newppg, 1)
+
+                    newrpg = ((currentrpg * oldcounter) + rpgentry)/(oldcounter+1)
+                    printrpg = round(newrpg, 1)
+
+                    newapg = ((currentapg * oldcounter) + apgentry)/(oldcounter+1)
+                    printapg = round(newapg, 1)
+
+                    newthreepm = ((currentthreepm * oldcounter) + threepmentry)/(oldcounter+1)
+                    printthreepm = round(newthreepm, 1)
+
+                    newthreepp = ((currentthreepp * oldcounter) + threeppentry)/(oldcounter+1)
+                    printthreepp = round(newthreepp, 1)
+
+                    newto = ((currentto * oldcounter) + toentry)/(oldcounter+1)
+                    printto = round(newto, 1)
+
+                    temp_line_split[2] = str(printppg)
+                    temp_line_split[3] = str(printrpg)
+                    temp_line_split[4] = str(printapg)
+                    temp_line_split[5] = str(printthreepm)
+                    temp_line_split[6] = str(printthreepp)
+                    temp_line_split[7] = str(printto)
+                
+                    updated_line = "|".join(temp_line_split)
+                    updated_filelines.append(updated_line)  # writes new line
+                    messagebox.showinfo("Success", "Player stats updated!")
+                else:
+                    updated_filelines.append(line)  # append original line if playerid not found
+
+        with open("PlayerStats.txt", "w") as f:
+            for line in updated_filelines:
+                f.write(line.strip() + "\n") 
+                
+    appendwindow = Tk()
+    appendwindow.title("Append Stats")
+    appendwindow.geometry("550x650+{}+{}".format(appendwindow.winfo_x() + 600, appendwindow.winfo_y() + 200))
+    appendwindow.configure(bg="#CCCCCC")
+    appendwindow.resizable(0, 0)
+    frame = Frame(appendwindow, bg="#856FF8", highlightbackground="black", highlightthickness=2, height=150, width=550)
+    frame.place(x=0, y=0)
+    
+    f = font.Font(size=20)
+    
+    header = Label(frame, text="Append Stats Menu:")
+    header["font"] = f
+    header.place(x=100, y=50)
+    header.configure(bg="#856FF8")
+
+
+    players = []
+    with open("PlayerList.txt", 'r') as f:
+        for line in f:
+            players.append(line.split("|")[1].strip())
+
+    #saves all players names to a list
+                                                    
+
+    global appendplayerdropdown
+    appendplayerdropdown = ttk.Combobox(appendwindow, values=players)
+    appendplayerdropdown.place(x=225, y=180)
+    pdrop_label = Label(appendwindow, text="Select a Player:")
+    pdrop_label.place(x=70, y=180)
+    pdrop_label.configure(bg="#CCCCCC")
+
+    global newppgentry
+    newppgentry = Entry(appendwindow)
+    newppgentry.place(x = 225, y = 200)
+    newppglabel = Label(appendwindow, text="Points Per Game:")
+    newppglabel.place(x=70, y=200)
+    newppglabel.configure(bg="#CCCCCC")
+
+    global newrpgentry
+    newrpgentry = Entry(appendwindow)
+    newrpgentry.place(x = 225, y = 220)
+    newrpglabel = Label(appendwindow, text="Rebounds Per Game:")
+    newrpglabel.place(x=70, y=220)
+    newrpglabel.configure(bg="#CCCCCC")
+
+    global newapgentry
+    newapgentry = Entry(appendwindow)
+    newapgentry.place(x = 225, y = 240)
+    newapglabel = Label(appendwindow, text="Assists Per Game:")
+    newapglabel.place(x=70, y=240)
+    newapglabel.configure(bg="#CCCCCC")
+
+    global newthreepmentry
+    newthreepmentry = Entry(appendwindow)
+    newthreepmentry.place(x = 225, y = 260)
+    newthreepmlabel = Label(appendwindow, text="Three Points Made:")
+    newthreepmlabel.place(x=70, y=260)
+    newthreepmlabel.configure(bg="#CCCCCC")
+
+    global newthreeppentry
+    newthreeppentry = Entry(appendwindow)
+    newthreeppentry.place(x = 225, y = 280)
+    newthreepplabel = Label(appendwindow, text="Three Point Percentage:")
+    newthreepplabel.place(x=70, y=280)
+    newthreepplabel.configure(bg="#CCCCCC")
+
+    global newtoentry
+    newtoentry = Entry(appendwindow)
+    newtoentry.place(x = 225, y = 300)
+    newtolabel = Label(appendwindow, text="Turnovers Per Game:")
+    newtolabel.place(x=70, y=300)
+    newtolabel.configure(bg="#CCCCCC")
+
+    updatebutton = Button(appendwindow,
+                          background = "#CCCCCC",
+                        foreground = "BLACK",
+                        activebackground = "#856FF8",
+                        highlightthickness = 2,
+                        highlightbackground = "#CCCCCC",
+                        highlightcolor = "WHITE",
+                        height = 2,
+                        width = 20,
+                        cursor = "hand1",
+                          text="Update", command=ValidateStats)
+    updatebutton.place(x=200, y=350)
+
+    #entry boxes to add new stats
+    #update button adds runs the sub-subroutine
+    #therefore details are saved to text file
+
+    teamselectbutton = Button(appendwindow,
+                              background = "#CCCCCC",
+                            foreground = "BLACK",
+                            activebackground = "#856FF8",
+                            highlightthickness = 2,
+                            highlightbackground = "#CCCCCC",
+                            highlightcolor = "WHITE",
+                            height = 2,
+                            width = 20,
+                            cursor = "hand1",
+                              text="Return to Team Select", command = lambda: ReturnSelect(appendwindow))
+    teamselectbutton.place(x = 200, y = 400)
+
+    homebutton = Button(appendwindow,
+                        background = "#CCCCCC",
+                        foreground = "BLACK",
+                        activebackground = "#856FF8",
+                        highlightthickness = 2,
+                        highlightbackground = "#CCCCCC",
+                        highlightcolor = "WHITE",
+                        height = 2,
+                        width = 20,
+                        cursor = "hand1",
+                        text="Return to Main Menu", command = lambda: DestroyFirst(appendwindow))
+    homebutton.place(x=200, y=450)
+
+    #two buttons, one to return to login, one to return to team select
+
+   
+#--------------------------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------------------
+
+def ValeStats():
+    entryinfo = playerdropdown.get()
+
+    with open("PlayerList.txt", "r") as f:
+        filelines = f.readlines()
+        for line in filelines:
+            if entryinfo in line:
+                linesplit = line.split("|")
+                global playerid
+                playerid = linesplit[0]
+
+                #finds the player id using line split method
+
+        
+    with open("PlayerStats.txt", "r") as f:
+        filelines = f.readlines()
+        for line in filelines:
+            if playerid in line:
+                global vpstats
+                vpstats = Tk()
+                vpstats.title(entryinfo)
+                vpstats.geometry("550x650+{}+{}".format(vpstats.winfo_x() + 600, vpstats.winfo_y() + 200))
+                vpstats.configure(bg = "#CCCCCC")
+                vpstats.resizable(0,0)
+                frame = Frame(vpstats, bg = "#856FF8", highlightbackground = "black", highlightthickness = 2, height = 150, width = 550)
+                frame.place(x = 0, y = 0)
+                f = font.Font(size=20)
+                
+                header = Label(frame, text = entryinfo + " stats:")
+                header["font"] = f
+                header.place(x = 100, y = 50)
+                header.configure(bg = "#856FF8")
+
+            #creation of initial window
+
+
+        with open("PlayerStats.txt", 'r') as f:
+            f.seek(0)
+            filelines = f.readlines()
+            if filelines:
+                for line in filelines:
+                    if playerid in line:
+                        linesplit = line.split("|")
+                        
+                        statsid = str(linesplit[0])
+                        newplayerid = str(linesplit[1])
+                        ppg = str(linesplit[2])
+                        rpg = str(linesplit[3])
+                        apg = str(linesplit[4])
+                        threepm = str(linesplit[5])
+                        threepp = str(linesplit[6])
+                        turnover = str(linesplit[7])
+                        counter = str(linesplit[8])
+
+        msgppg = Message(vpstats, text = ppg)
+        msgppg.place(x = 250, y = 260)
+        msgppg.configure(bg = "#CCCCCC")
+        labelppg = Label(vpstats, text = "Points per game:")
+        labelppg.place(x = 100, y = 260)
+        labelppg.configure(bg = "#CCCCCC")
+
+        msgrpg = Message(vpstats, text = rpg)
+        msgrpg.place(x = 250, y = 290)
+        msgrpg.configure(bg = "#CCCCCC")
+        labelrpg = Label(vpstats, text = "Rebounds per game:")
+        labelrpg.place(x = 100, y = 290)
+        labelrpg.configure(bg = "#CCCCCC")
+
+        msgapg = Message(vpstats, text = apg)
+        msgapg.place(x = 250, y = 320)
+        msgapg.configure(bg = "#CCCCCC")
+        labelapg = Label(vpstats, text = "Assists per game:")
+        labelapg.place(x = 100, y = 320)
+        labelapg.configure(bg = "#CCCCCC")
+        
+        msgthreepm = Message(vpstats, text = threepm)
+        msgthreepm.place(x = 250, y = 350)
+        msgthreepm.configure(bg = "#CCCCCC")
+        labelthreepm = Label(vpstats, text = "Three point made:")
+        labelthreepm.place(x = 100, y = 350)
+        labelthreepm.configure(bg = "#CCCCCC")
+
+        msgthreepp = Message(vpstats, text = threepp)
+        msgthreepp.place(x = 250, y = 380)
+        msgthreepp.configure(bg = "#CCCCCC")
+        labelthreepp = Label(vpstats, text ="Three point %:")
+        labelthreepp.place(x = 100, y = 380)
+        labelthreepp.configure(bg = "#CCCCCC")
+
+        msgturnover = Message(vpstats, text = turnover)
+        msgturnover.place(x = 250, y = 410)
+        msgturnover.configure(bg = "#CCCCCC")
+        labelto = Label(vpstats, text = "Turnovers:")
+        labelto.place(x = 100, y = 410)
+        labelto.configure(bg = "#CCCCCC")
+
+        #displays all the stats for the player chosen
+
+        homebutton = Button(vpstats,
+                            background = "#CCCCCC",
+                            foreground = "BLACK",
+                            activebackground = "#856FF8",
+                            highlightthickness = 2,
+                            highlightbackground = "#CCCCCC",
+                            highlightcolor = "WHITE",
+                            height = 2,
+                            width = 20,
+                            cursor = "hand1",
+                            text="Return to Main Menu", command = lambda: ReturnSelect(vpstats))
+        homebutton.place(x=190, y=440)
+
+        #button to return to the home page
+        #this is the "final" menu of the system
+
+def ArcherStats():
+    entryinfo = playerdropdown.get()
+
+    with open("PlayerList.txt", "r") as f:
+        filelines = f.readlines()
+        for line in filelines:
+            if entryinfo in line:
+                linesplit = line.split("|")
+                global playerid
+                playerid = linesplit[0]
+
+        
+    with open("PlayerStats.txt", "r") as f:
+        filelines = f.readlines()
+        for line in filelines:
+            if playerid in line:
+                global apstats
+                apstats = Tk()
+                apstats.title(entryinfo)
+                apstats.geometry("550x650+{}+{}".format(apstats.winfo_x() + 600, apstats.winfo_y() + 200))
+                apstats.configure(bg = "#CCCCCC")
+                apstats.resizable(0,0)
+                frame = Frame(apstats, bg = "#856FF8", highlightbackground = "black", highlightthickness = 2, height = 150, width = 550)
+                frame.place(x = 0, y = 0)
+                
+                f = font.Font(size=20)
+                
+                header = Label(frame, text = entryinfo + " stats:")
+                header["font"] = f
+                header.place(x = 100, y = 50)
+                header.configure(bg = "#856FF8")
+
+
+        with open("PlayerStats.txt", 'r') as f:
+            f.seek(0)
+            filelines = f.readlines()
+            if filelines:
+                for line in filelines:
+                    if playerid in line:
+                        linesplit = line.split("|")
+                        
+                        statsid = str(linesplit[0])
+                        newplayerid = str(linesplit[1])
+                        ppg = str(linesplit[2])
+                        rpg = str(linesplit[3])
+                        apg = str(linesplit[4])
+                        threepm = str(linesplit[5])
+                        threepp = str(linesplit[6])
+                        turnover = str(linesplit[7])
+                        counter = str(linesplit[8])
+
+        msgppg = Message(apstats, text = ppg)
+        msgppg.place(x = 250, y = 260)
+        msgppg.configure(bg = "#CCCCCC")
+        labelppg = Label(apstats, text = "Points per game:")
+        labelppg.place(x = 100, y = 260)
+        labelppg.configure(bg = "#CCCCCC")
+
+        msgrpg = Message(apstats, text = rpg)
+        msgrpg.place(x = 250, y = 290)
+        msgrpg.configure(bg = "#CCCCCC")
+        labelrpg = Label(apstats, text = "Rebounds per game:")
+        labelrpg.place(x = 100, y = 290)
+        labelrpg.configure(bg = "#CCCCCC")
+
+        msgapg = Message(apstats, text = apg)
+        msgapg.place(x = 250, y = 320)
+        msgapg.configure(bg = "#CCCCCC")
+        labelapg = Label(apstats, text = "Assists per game:")
+        labelapg.place(x = 100, y = 320)
+        labelapg.configure(bg = "#CCCCCC")
+        
+        msgthreepm = Message(apstats, text = threepm)
+        msgthreepm.place(x = 250, y = 350)
+        msgthreepm.configure(bg = "#CCCCCC")
+        labelthreepm = Label(apstats, text = "Three point made:")
+        labelthreepm.place(x = 100, y = 350)
+        labelthreepm.configure(bg = "#CCCCCC")
+
+        msgthreepp = Message(apstats, text = threepp)
+        msgthreepp.place(x = 250, y = 380)
+        msgthreepp.configure(bg = "#CCCCCC")
+        labelthreepp = Label(apstats, text ="Three point %:")
+        labelthreepp.place(x = 100, y = 380)
+        labelthreepp.configure(bg = "#CCCCCC")
+
+        msgturnover = Message(apstats, text = turnover)
+        msgturnover.place(x = 250, y = 410)
+        msgturnover.configure(bg = "#CCCCCC")
+        labelto = Label(apstats, text = "Turnovers:")
+        labelto.place(x = 100, y = 410)
+        labelto.configure(bg = "#CCCCCC")
+
+        homebutton = Button(apstats,
+                            background = "#CCCCCC",
+                            foreground = "BLACK",
+                            activebackground = "#856FF8",
+                            highlightthickness = 2,
+                            highlightbackground = "#CCCCCC",
+                            highlightcolor = "WHITE",
+                            height = 2,
+                            width = 20,
+                            cursor = "hand1",
+                            text="Return to Main Menu", command = lambda: ReturnSelect(apstats))
+        homebutton.place(x=190, y=440)
+
+        #SAME AS ValeStats SUBROUTINE JUST FOR PLAYERS LISTED AS THIS SPECIFIC TEAM
+
+def SaintStats():
+    entryinfo = playerdropdown.get()
+
+    with open("PlayerList.txt", "r") as f:
+        filelines = f.readlines()
+        for line in filelines:
+            if entryinfo in line:
+                linesplit = line.split("|")
+                global playerid
+                playerid = linesplit[0]
+
+        
+    with open("PlayerStats.txt", "r") as f:
+        filelines = f.readlines()
+        for line in filelines:
+            if playerid in line:
+                global spstats
+                spstats = Tk()
+                spstats.title(entryinfo)
+                spstats.geometry("550x650+{}+{}".format(spstats.winfo_x() + 600, spstats.winfo_y() + 200))
+                spstats.configure(bg = "#CCCCCC")
+                spstats.resizable(0,0)
+                frame = Frame(spstats, bg = "#856FF8", highlightbackground = "black", highlightthickness = 2, height = 150, width = 550)
+                frame.place(x = 0, y = 0)
+                
+                f = font.Font(size=20)
+                
+                header = Label(frame, text = entryinfo + " stats:")
+                header["font"] = f
+                header.place(x = 100, y = 50)
+                header.configure(bg = "#856FF8")
+
+
+        with open("PlayerStats.txt", 'r') as f:
+            f.seek(0)
+            filelines = f.readlines()
+            if filelines:
+                for line in filelines:
+                    if playerid in line:
+                        linesplit = line.split("|")
+                        
+                        statsid = str(linesplit[0])
+                        newplayerid = str(linesplit[1])
+                        ppg = str(linesplit[2])
+                        rpg = str(linesplit[3])
+                        apg = str(linesplit[4])
+                        threepm = str(linesplit[5])
+                        threepp = str(linesplit[6])
+                        turnover = str(linesplit[7])
+                        counter = str(linesplit[8])
+
+        msgppg = Message(spstats, text = ppg)
+        msgppg.place(x = 250, y = 260)
+        msgppg.configure(bg = "#CCCCCC")
+        labelppg = Label(spstats, text = "Points per game:")
+        labelppg.place(x = 100, y = 260)
+        labelppg.configure(bg = "#CCCCCC")
+
+        msgrpg = Message(spstats, text = rpg)
+        msgrpg.place(x = 250, y = 290)
+        msgrpg.configure(bg = "#CCCCCC")
+        labelrpg = Label(spstats, text = "Rebounds per game:")
+        labelrpg.place(x = 100, y = 290)
+        labelrpg.configure(bg = "#CCCCCC")
+
+        msgapg = Message(spstats, text = apg)
+        msgapg.place(x = 250, y = 320)
+        msgapg.configure(bg = "#CCCCCC")
+        labelapg = Label(spstats, text = "Assists per game:")
+        labelapg.place(x = 100, y = 320)
+        labelapg.configure(bg = "#CCCCCC")
+        
+        msgthreepm = Message(spstats, text = threepm)
+        msgthreepm.place(x = 250, y = 350)
+        msgthreepm.configure(bg = "#CCCCCC")
+        labelthreepm = Label(spstats, text = "Three point made:")
+        labelthreepm.place(x = 100, y = 350)
+        labelthreepm.configure(bg = "#CCCCCC")
+
+        msgthreepp = Message(spstats, text = threepp)
+        msgthreepp.place(x = 250, y = 380)
+        msgthreepp.configure(bg = "#CCCCCC")
+        labelthreepp = Label(spstats, text ="Three point %:")
+        labelthreepp.place(x = 100, y = 380)
+        labelthreepp.configure(bg = "#CCCCCC")
+
+        msgturnover = Message(spstats, text = turnover)
+        msgturnover.place(x = 250, y = 410)
+        msgturnover.configure(bg = "#CCCCCC")
+        labelto = Label(spstats, text = "Turnovers:")
+        labelto.place(x = 100, y = 410)
+        labelto.configure(bg = "#CCCCCC")
+
+        homebutton = Button(spstats,
+                            background = "#CCCCCC",
+                            foreground = "BLACK",
+                            activebackground = "#856FF8",
+                            highlightthickness = 2,
+                            highlightbackground = "#CCCCCC",
+                            highlightcolor = "WHITE",
+                            height = 2,
+                            width = 20,
+                            cursor = "hand1",
+                            text="Return to Main Menu", command = lambda: ReturnSelect(spstats))
+        homebutton.place(x=190, y=440)
+
+        #SAME AS ValeStats SUBROUTINE JUST FOR PLAYERS LISTED AS THIS SPECIFIC TEAM
+
+def CobraStats():
+    entryinfo = playerdropdown.get()
+
+    with open("PlayerList.txt", "r") as f:
+        filelines = f.readlines()
+        for line in filelines:
+            if entryinfo in line:
+                linesplit = line.split("|")
+                global playerid
+                playerid = linesplit[0]
+        
+    with open("PlayerStats.txt", "r") as f:
+        filelines = f.readlines()
+        for line in filelines:
+            if playerid in line:
+                global cpstats
+                cpstats = Tk()
+                cpstats.title(entryinfo)
+                cpstats.geometry("550x650+{}+{}".format(cpstats.winfo_x() + 600, cpstats.winfo_y() + 200))
+                cpstats.configure(bg = "#CCCCCC")
+                cpstats.resizable(0,0)
+                frame = Frame(cpstats, bg = "#856FF8", highlightbackground = "black", highlightthickness = 2, height = 150, width = 550)
+                frame.place(x = 0, y = 0)
+                
+                f = font.Font(size=20)
+                
+                header = Label(frame, text = entryinfo + " stats:")
+                header["font"] = f
+                header.place(x = 100, y = 50)
+                header.configure(bg = "#856FF8")
+
+
+        with open("PlayerStats.txt", 'r') as f:
+            f.seek(0)
+            filelines = f.readlines()
+            if filelines:
+                for line in filelines:
+                    if playerid in line:
+                        linesplit = line.split("|")
+                        
+                        statsid = str(linesplit[0])
+                        newplayerid = str(linesplit[1])
+                        ppg = str(linesplit[2])
+                        rpg = str(linesplit[3])
+                        apg = str(linesplit[4])
+                        threepm = str(linesplit[5])
+                        threepp = str(linesplit[6])
+                        turnover = str(linesplit[7])
+                        counter = str(linesplit[8])
+
+        msgppg = Message(cpstats, text = ppg)
+        msgppg.place(x = 250, y = 260)
+        msgppg.configure(bg = "#CCCCCC")
+        labelppg = Label(cpstats, text = "Points per game:")
+        labelppg.place(x = 100, y = 260)
+        labelppg.configure(bg = "#CCCCCC")
+
+        msgrpg = Message(cpstats, text = rpg)
+        msgrpg.place(x = 250, y = 290)
+        msgrpg.configure(bg = "#CCCCCC")
+        labelrpg = Label(cpstats, text = "Rebounds per game:")
+        labelrpg.place(x = 100, y = 290)
+        labelrpg.configure(bg = "#CCCCCC")
+
+        msgapg = Message(cpstats, text = apg)
+        msgapg.place(x = 250, y = 320)
+        msgapg.configure(bg = "#CCCCCC")
+        labelapg = Label(cpstats, text = "Assists per game:")
+        labelapg.place(x = 100, y = 320)
+        labelapg.configure(bg = "#CCCCCC")
+        
+        msgthreepm = Message(cpstats, text = threepm)
+        msgthreepm.place(x = 250, y = 350)
+        msgthreepm.configure(bg = "#CCCCCC")
+        labelthreepm = Label(cpstats, text = "Three point made:")
+        labelthreepm.place(x = 100, y = 350)
+        labelthreepm.configure(bg = "#CCCCCC")
+
+        msgthreepp = Message(cpstats, text = threepp)
+        msgthreepp.place(x = 250, y = 380)
+        msgthreepp.configure(bg = "#CCCCCC")
+        labelthreepp = Label(cpstats, text ="Three point %:")
+        labelthreepp.place(x = 100, y = 380)
+        labelthreepp.configure(bg = "#CCCCCC")
+
+        msgturnover = Message(cpstats, text = turnover)
+        msgturnover.place(x = 250, y = 410)
+        msgturnover.configure(bg = "#CCCCCC")
+        labelto = Label(cpstats, text = "Turnovers:")
+        labelto.place(x = 100, y = 410)
+        labelto.configure(bg = "#CCCCCC")
+
+        homebutton = Button(cpstats,
+                            background = "#CCCCCC",
+                            foreground = "BLACK",
+                            activebackground = "#856FF8",
+                            highlightthickness = 2,
+                            highlightbackground = "#CCCCCC",
+                            highlightcolor = "WHITE",
+                            height = 2,
+                            width = 20,
+                            cursor = "hand1",
+                            text="Return to Main Menu", command = lambda: ReturnSelect(cpstats))
+        homebutton.place(x=190, y=440)
+
+        #SAME AS ValeStats SUBROUTINE JUST FOR PLAYERS LISTED AS THIS SPECIFIC TEAM
+
+def PontyStats():
+    entryinfo = playerdropdown.get()
+
+    with open("PlayerList.txt", "r") as f:
+        filelines = f.readlines()
+        for line in filelines:
+            if entryinfo in line:
+                linesplit = line.split("|")
+                global playerid
+                playerid = linesplit[0]
+
+        
+    with open("PlayerStats.txt", "r") as f:
+        filelines = f.readlines()
+        for line in filelines:
+            if playerid in line:
+                global ppstats
+                ppstats = Tk()
+                ppstats.title(entryinfo)
+                ppstats.geometry("550x650+{}+{}".format(ppstats.winfo_x() + 600, ppstats.winfo_y() + 200))
+                ppstats.configure(bg = "#CCCCCC")
+                ppstats.resizable(0,0)
+                frame = Frame(ppstats, bg = "#856FF8", highlightbackground = "black", highlightthickness = 2, height = 150, width = 550)
+                frame.place(x = 0, y = 0)
+                
+                f = font.Font(size=20)
+                
+                header = Label(frame, text = entryinfo + " stats:")
+                header["font"] = f
+                header.place(x = 100, y = 50)
+                header.configure(bg = "#856FF8")
+
+
+        with open("PlayerStats.txt", 'r') as f:
+            f.seek(0)
+            filelines = f.readlines()
+            if filelines:
+                for line in filelines:
+                    if playerid in line:
+                        linesplit = line.split("|")
+                        
+                        statsid = str(linesplit[0])
+                        newplayerid = str(linesplit[1])
+                        ppg = str(linesplit[2])
+                        rpg = str(linesplit[3])
+                        apg = str(linesplit[4])
+                        threepm = str(linesplit[5])
+                        threepp = str(linesplit[6])
+                        turnover = str(linesplit[7])
+                        counter = str(linesplit[8])
+
+        msgppg = Message(ppstats, text = ppg)
+        msgppg.place(x = 250, y = 260)
+        msgppg.configure(bg = "#CCCCCC")
+        labelppg = Label(ppstats, text = "Points per game:")
+        labelppg.place(x = 100, y = 260)
+        labelppg.configure(bg = "#CCCCCC")
+
+        msgrpg = Message(ppstats, text = rpg)
+        msgrpg.place(x = 250, y = 290)
+        msgrpg.configure(bg = "#CCCCCC")
+        labelrpg = Label(ppstats, text = "Rebounds per game:")
+        labelrpg.place(x = 100, y = 290)
+        labelrpg.configure(bg = "#CCCCCC")
+
+        msgapg = Message(ppstats, text = apg)
+        msgapg.place(x = 250, y = 320)
+        msgapg.configure(bg = "#CCCCCC")
+        labelapg = Label(ppstats, text = "Assists per game:")
+        labelapg.place(x = 100, y = 320)
+        labelapg.configure(bg = "#CCCCCC")
+        
+        msgthreepm = Message(ppstats, text = threepm)
+        msgthreepm.place(x = 250, y = 350)
+        msgthreepm.configure(bg = "#CCCCCC")
+        labelthreepm = Label(ppstats, text = "Three point made:")
+        labelthreepm.place(x = 100, y = 350)
+        labelthreepm.configure(bg = "#CCCCCC")
+
+        msgthreepp = Message(ppstats, text = threepp)
+        msgthreepp.place(x = 250, y = 380)
+        msgthreepp.configure(bg = "#CCCCCC")
+        labelthreepp = Label(ppstats, text ="Three point %:")
+        labelthreepp.place(x = 100, y = 380)
+        labelthreepp.configure(bg = "#CCCCCC")
+
+        msgturnover = Message(ppstats, text = turnover)
+        msgturnover.place(x = 250, y = 410)
+        msgturnover.configure(bg = "#CCCCCC")
+        labelto = Label(ppstats, text = "Turnovers:")
+        labelto.place(x = 100, y = 410)
+        labelto.configure(bg = "#CCCCCC")
+
+        homebutton = Button(ppstats,
+                            background = "#CCCCCC",
+                            foreground = "BLACK",
+                            activebackground = "#856FF8",
+                            highlightthickness = 2,
+                            highlightbackground = "#CCCCCC",
+                            highlightcolor = "WHITE",
+                            height = 2,
+                            width = 20,
+                            cursor = "hand1",
+                            text="Return to Main Menu", command = lambda: ReturnSelect(ppstats))
+        homebutton.place(x=190, y=440)
+
+        #SAME AS ValeStats SUBROUTINE JUST FOR PLAYERS LISTED AS THIS SPECIFIC TEAM
+
+def TribalStats():
+    entryinfo = playerdropdown.get()
+
+    with open("PlayerList.txt", "r") as f:
+        filelines = f.readlines()
+        for line in filelines:
+            if entryinfo in line:
+                linesplit = line.split("|")
+                global playerid
+                playerid = linesplit[0]
+
+        
+    with open("PlayerStats.txt", "r") as f:
+        filelines = f.readlines()
+        for line in filelines:
+            if playerid in line:
+                global tpstats
+                tpstats = Tk()
+                tpstats.title(entryinfo)
+                tpstats.geometry("550x650+{}+{}".format(tpstats.winfo_x() + 600, tpstats.winfo_y() + 200))
+                tpstats.configure(bg = "#CCCCCC")
+                tpstats.resizable(0,0)
+                frame = Frame(tpstats, bg = "#856FF8", highlightbackground = "black", highlightthickness = 2, height = 150, width = 550)
+                frame.place(x = 0, y = 0)
+                
+                f = font.Font(size=20)
+                
+                header = Label(frame, text = entryinfo + " stats:")
+                header["font"] = f
+                header.place(x = 100, y = 50)
+                header.configure(bg = "#856FF8")
+
+
+        with open("PlayerStats.txt", 'r') as f:
+            f.seek(0)
+            filelines = f.readlines()
+            if filelines:
+                for line in filelines:
+                    if playerid in line:
+                        linesplit = line.split("|")
+                        
+                        statsid = str(linesplit[0])
+                        newplayerid = str(linesplit[1])
+                        ppg = str(linesplit[2])
+                        rpg = str(linesplit[3])
+                        apg = str(linesplit[4])
+                        threepm = str(linesplit[5])
+                        threepp = str(linesplit[6])
+                        turnover = str(linesplit[7])
+                        counter = str(linesplit[8])
+
+        msgppg = Message(tpstats, text = ppg)
+        msgppg.place(x = 250, y = 260)
+        msgppg.configure(bg = "#CCCCCC")
+        labelppg = Label(tpstats, text = "Points per game:")
+        labelppg.place(x = 100, y = 260)
+        labelppg.configure(bg = "#CCCCCC")
+
+        msgrpg = Message(tpstats, text = rpg)
+        msgrpg.place(x = 250, y = 290)
+        msgrpg.configure(bg = "#CCCCCC")
+        labelrpg = Label(spstats, text = "Rebounds per game:")
+        labelrpg.place(x = 100, y = 290)
+        labelrpg.configure(bg = "#CCCCCC")
+
+        msgapg = Message(tpstats, text = apg)
+        msgapg.place(x = 250, y = 320)
+        msgapg.configure(bg = "#CCCCCC")
+        labelapg = Label(tpstats, text = "Assists per game:")
+        labelapg.place(x = 100, y = 320)
+        labelapg.configure(bg = "#CCCCCC")
+        
+        msgthreepm = Message(tpstats, text = threepm)
+        msgthreepm.place(x = 250, y = 350)
+        msgthreepm.configure(bg = "#CCCCCC")
+        labelthreepm = Label(tpstats, text = "Three point made:")
+        labelthreepm.place(x = 100, y = 350)
+        labelthreepm.configure(bg = "#CCCCCC")
+
+        msgthreepp = Message(tpstats, text = threepp)
+        msgthreepp.place(x = 250, y = 380)
+        msgthreepp.configure(bg = "#CCCCCC")
+        labelthreepp = Label(tpstats, text ="Three point %:")
+        labelthreepp.place(x = 100, y = 380)
+        labelthreepp.configure(bg = "#CCCCCC")
+
+        msgturnover = Message(tpstats, text = turnover)
+        msgturnover.place(x = 250, y = 410)
+        msgturnover.configure(bg = "#CCCCCC")
+        labelto = Label(tpstats, text = "Turnovers:")
+        labelto.place(x = 100, y = 410)
+        labelto.configure(bg = "#CCCCCC")
+
+        homebutton = Button(tpstats,
+                            background = "#CCCCCC",
+                            foreground = "BLACK",
+                            activebackground = "#856FF8",
+                            highlightthickness = 2,
+                            highlightbackground = "#CCCCCC",
+                            highlightcolor = "WHITE",
+                            height = 2,
+                            width = 20,
+                            cursor = "hand1",
+                            text="Return to Main Menu", command = lambda: ReturnSelect(tpstats))
+        homebutton.place(x=190, y=440)
+
+        #SAME AS ValeStats SUBROUTINE JUST FOR PLAYERS LISTED AS THIS SPECIFIC TEAM
+
+def BristolStats():
+    entryinfo = playerdropdown.get()
+
+    with open("PlayerList.txt", "r") as f:
+        filelines = f.readlines()
+        for line in filelines:
+            if entryinfo in line:
+                linesplit = line.split("|")
+                global playerid
+                playerid = linesplit[0]
+        
+    with open("PlayerStats.txt", "r") as f:
+        filelines = f.readlines()
+        for line in filelines:
+            if playerid in line:
+                global bpstats
+                bpstats = Tk()
+                bpstats.title(entryinfo)
+                bpstats.geometry("550x650+{}+{}".format(bpstats.winfo_x() + 600, bpstats.winfo_y() + 200))
+                bpstats.configure(bg = "#CCCCCC")
+                bpstats.resizable(0,0)
+                frame = Frame(bpstats, bg = "#856FF8", highlightbackground = "black", highlightthickness = 2, height = 150, width = 550)
+                frame.place(x = 0, y = 0)
+                
+                f = font.Font(size=20)
+                
+                header = Label(frame, text = entryinfo + " stats:")
+                header["font"] = f
+                header.place(x = 100, y = 50)
+                header.configure(bg = "#856FF8")
+
+
+        with open("PlayerStats.txt", 'r') as f:
+            f.seek(0)
+            filelines = f.readlines()
+            if filelines:
+                for line in filelines:
+                    if playerid in line:
+                        linesplit = line.split("|")
+                        
+                        statsid = str(linesplit[0])
+                        newplayerid = str(linesplit[1])
+                        ppg = str(linesplit[2])
+                        rpg = str(linesplit[3])
+                        apg = str(linesplit[4])
+                        threepm = str(linesplit[5])
+                        threepp = str(linesplit[6])
+                        turnover = str(linesplit[7])
+                        counter = str(linesplit[8])
+
+        msgppg = Message(bpstats, text = ppg)
+        msgppg.place(x = 250, y = 260)
+        msgppg.configure(bg = "#CCCCCC")
+        labelppg = Label(bpstats, text = "Points per game:")
+        labelppg.place(x = 100, y = 260)
+        labelppg.configure(bg = "#CCCCCC")
+
+        msgrpg = Message(bpstats, text = rpg)
+        msgrpg.place(x = 250, y = 290)
+        msgrpg.configure(bg = "#CCCCCC")
+        labelrpg = Label(bpstats, text = "Rebounds per game:")
+        labelrpg.place(x = 100, y = 290)
+        labelrpg.configure(bg = "#CCCCCC")
+
+        msgapg = Message(bpstats, text = apg)
+        msgapg.place(x = 250, y = 320)
+        msgapg.configure(bg = "#CCCCCC")
+        labelapg = Label(bpstats, text = "Assists per game:")
+        labelapg.place(x = 100, y = 320)
+        labelapg.configure(bg = "#CCCCCC")
+        
+        msgthreepm = Message(bpstats, text = threepm)
+        msgthreepm.place(x = 250, y = 350)
+        msgthreepm.configure(bg = "#CCCCCC")
+        labelthreepm = Label(bpstats, text = "Three point made:")
+        labelthreepm.place(x = 100, y = 350)
+        labelthreepm.configure(bg = "#CCCCCC")
+
+        msgthreepp = Message(bpstats, text = threepp)
+        msgthreepp.place(x = 250, y = 380)
+        msgthreepp.configure(bg = "#CCCCCC")
+        labelthreepp = Label(bpstats, text ="Three point %:")
+        labelthreepp.place(x = 100, y = 380)
+        labelthreepp.configure(bg = "#CCCCCC")
+
+        msgturnover = Message(bpstats, text = turnover)
+        msgturnover.place(x = 250, y = 410)
+        msgturnover.configure(bg = "#CCCCCC")
+        labelto = Label(bpstats, text = "Turnovers:")
+        labelto.place(x = 100, y = 410)
+        labelto.configure(bg = "#CCCCCC")
+
+        homebutton = Button(bpstats,
+                            background = "#CCCCCC",
+                            foreground = "BLACK",
+                            activebackground = "#856FF8",
+                            highlightthickness = 2,
+                            highlightbackground = "#CCCCCC",
+                            highlightcolor = "WHITE",
+                            height = 2,
+                            width = 20,
+                            cursor = "hand1",
+                            text="Return to Main Menu", command = lambda: ReturnSelect(bpstats))
+        homebutton.place(x=190, y=440)
+
+        #SAME AS ValeStats SUBROUTINE JUST FOR PLAYERS LISTED AS THIS SPECIFIC TEAM
+
+def SapatStats():
+    entryinfo = playerdropdown.get()
+
+    with open("PlayerList.txt", "r") as f:
+        filelines = f.readlines()
+        for line in filelines:
+            if entryinfo in line:
+                linesplit = line.split("|")
+                global playerid
+                playerid = linesplit[0]
+
+        
+    with open("PlayerStats.txt", "r") as f:
+        filelines = f.readlines()
+        for line in filelines:
+            if playerid in line:
+                global slpstats
+                slpstats = Tk()
+                slpstats.title(entryinfo)
+                slpstats.geometry("550x650+{}+{}".format(slpstats.winfo_x() + 600, slpstats.winfo_y() + 200))
+                slpstats.configure(bg = "#CCCCCC")
+                slpstats.resizable(0,0)
+                frame = Frame(slpstats, bg = "#856FF8", highlightbackground = "black", highlightthickness = 2, height = 150, width = 550)
+                frame.place(x = 0, y = 0)
+                
+                f = font.Font(size=20)
+                
+                header = Label(frame, text = entryinfo + " stats:")
+                header["font"] = f
+                header.place(x = 100, y = 50)
+                header.configure(bg = "#856FF8")
+
+
+        with open("PlayerStats.txt", 'r') as f:
+            f.seek(0)
+            filelines = f.readlines()
+            if filelines:
+                for line in filelines:
+                    if playerid in line:
+                        linesplit = line.split("|")
+                        
+                        statsid = str(linesplit[0])
+                        newplayerid = str(linesplit[1])
+                        ppg = str(linesplit[2])
+                        rpg = str(linesplit[3])
+                        apg = str(linesplit[4])
+                        threepm = str(linesplit[5])
+                        threepp = str(linesplit[6])
+                        turnover = str(linesplit[7])
+                        counter = str(linesplit[8])
+
+        msgppg = Message(slpstats, text = ppg)
+        msgppg.place(x = 250, y = 260)
+        msgppg.configure(bg = "#CCCCCC")
+        labelppg = Label(slpstats, text = "Points per game:")
+        labelppg.place(x = 100, y = 260)
+        labelppg.configure(bg = "#CCCCCC")
+
+        msgrpg = Message(slpstats, text = rpg)
+        msgrpg.place(x = 250, y = 290)
+        msgrpg.configure(bg = "#CCCCCC")
+        labelrpg = Label(slpstats, text = "Rebounds per game:")
+        labelrpg.place(x = 100, y = 290)
+        labelrpg.configure(bg = "#CCCCCC")
+
+        msgapg = Message(slpstats, text = apg)
+        msgapg.place(x = 250, y = 320)
+        msgapg.configure(bg = "#CCCCCC")
+        labelapg = Label(slpstats, text = "Assists per game:")
+        labelapg.place(x = 100, y = 320)
+        labelapg.configure(bg = "#CCCCCC")
+        
+        msgthreepm = Message(slpstats, text = threepm)
+        msgthreepm.place(x = 250, y = 350)
+        msgthreepm.configure(bg = "#CCCCCC")
+        labelthreepm = Label(slpstats, text = "Three point made:")
+        labelthreepm.place(x = 100, y = 350)
+        labelthreepm.configure(bg = "#CCCCCC")
+
+        msgthreepp = Message(slpstats, text = threepp)
+        msgthreepp.place(x = 250, y = 380)
+        msgthreepp.configure(bg = "#CCCCCC")
+        labelthreepp = Label(slpstats, text ="Three point %:")
+        labelthreepp.place(x = 100, y = 380)
+        labelthreepp.configure(bg = "#CCCCCC")
+
+        msgturnover = Message(slpstats, text = turnover)
+        msgturnover.place(x = 250, y = 410)
+        msgturnover.configure(bg = "#CCCCCC")
+        labelto = Label(slpstats, text = "Turnovers:")
+        labelto.place(x = 100, y = 410)
+        labelto.configure(bg = "#CCCCCC")
+
+        homebutton = Button(slpstats,
+                            background = "#CCCCCC",
+                            foreground = "BLACK",
+                            activebackground = "#856FF8",
+                            highlightthickness = 2,
+                            highlightbackground = "#CCCCCC",
+                            highlightcolor = "WHITE",
+                            height = 2,
+                            width = 20,
+                            cursor = "hand1",
+                            text="Return to Main Menu", command = lambda: ReturnSelect(slpstats))
+        homebutton.place(x=190, y=440)
+
+        #SAME AS ValeStats SUBROUTINE JUST FOR PLAYERS LISTED AS THIS SPECIFIC TEAM
+
+
+#--------------------------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------------------
+
+def ValePlayers():
+    tswindow.destroy()
+    valewindow = Tk()
+    valewindow.title("Team Select")
+    valewindow.geometry("550x650+{}+{}".format(valewindow.winfo_x() + 600, valewindow.winfo_y() + 200))
+    valewindow.configure(bg="#CCCCCC")
+    valewindow.resizable(0,0)
+    frame = Frame(valewindow, bg="#856FF8", highlightbackground="black", highlightthickness=2, height=150, width=550)
+    frame.place(x=0, y=0)
+    
+    f = font.Font(size=20)
+    
+    header = Label(frame, text="Vale Vipers")
+    header["font"] = f
+    header.place(x=100, y=50)
+    header.configure(bg="#856FF8")
+
+    
+    global playerdropdown
+
+    players = []
+    with open("PlayerList.txt", 'r') as f:
+        for line in f:
+            if "Vale Vipers" in line:
+                players.append(line.split("|")[1].strip()) #shows all players listed under team vale in list
+
+    playerdropdown = ttk.Combobox(valewindow, values=players)
+    playerdropdown.place(x=215, y=240)
+    vp_label = Label(valewindow, text="Select a Player:")
+    vp_label.place(x=125, y=240)
+    vp_label.configure(bg="#CCCCCC")
+
+    #list is then displayed as a combo box
+
+    vpbutton = Button(valewindow,
+                    background = "#CCCCCC",
+                    foreground = "BLACK",
+                    activebackground = "#856FF8",
+                    highlightthickness = 2,
+                    highlightbackground = "#CCCCCC",
+                    highlightcolor = "WHITE",
+                    height = 2,
+                    width = 20,
+                    cursor = "hand1",
+                      text="Confirm", command = ValidatePlayerSelect)
+    vpbutton.place(x=190, y=300)
+
+    homebutton = Button(valewindow,
+                        background = "#CCCCCC",
+                        foreground = "BLACK",
+                        activebackground = "#856FF8",
+                        highlightthickness = 2,
+                        highlightbackground = "#CCCCCC",
+                        highlightcolor = "WHITE",
+                        height = 2,
+                        width = 20,
+                        cursor = "hand1",
+                        text="Return to Team Select", command = lambda: ReturnSelect(valewindow)) #lamda command runs a subroutine while carrying over a variable as a parameter
+    homebutton.place(x=190, y=350)
+
+    #one button is to go to that players stats, other is to return to home
+
+#--------------------------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------------------
+
+def ArchersPlayers():
+    tswindow.destroy()
+    archerwindow = Tk()
+    archerwindow.title("Team Select")
+    archerwindow.geometry("550x650+{}+{}".format(archerwindow.winfo_x() + 600, archerwindow.winfo_y() + 200))
+    archerwindow.configure(bg="#CCCCCC")
+    archerwindow.resizable(0,0)
+    frame = Frame(archerwindow, bg="#856FF8", highlightbackground="black", highlightthickness=2, height=150, width=550)
+    frame.place(x=0, y=0)
+    
+    f = font.Font(size=20)
+    
+    header = Label(frame, text="Cardiff Archers")
+    header["font"] = f
+    header.place(x=100, y=50)
+    header.configure(bg="#856FF8")
+
+    
+    global playerdropdown
+
+    players = []
+    with open("PlayerList.txt", 'r') as f:
+        for line in f:
+            if "Cardiff Archers" in line:
+                players.append(line.split("|")[1].strip())
+
+    playerdropdown = ttk.Combobox(archerwindow, values=players)
+    playerdropdown.place(x=215, y=240)
+    ap_label = Label(archerwindow, text="Select a Player:")
+    ap_label.place(x=125, y=240)
+    ap_label.configure(bg="#CCCCCC")
+
+    apbutton = Button(archerwindow,
+                        background = "#CCCCCC",
+                        foreground = "BLACK",
+                        activebackground = "#856FF8",
+                        highlightthickness = 2,
+                        highlightbackground = "#CCCCCC",
+                        highlightcolor = "WHITE",
+                        height = 2,
+                        width = 20,
+                        cursor = "hand1",
+                      text="Confirm", command=ValidatePlayerSelect)
+    apbutton.place(x=190, y=300)
+
+    homebutton = Button(archerwindow,
+                        background = "#CCCCCC",
+                        foreground = "BLACK",
+                        activebackground = "#856FF8",
+                        highlightthickness = 2,
+                        highlightbackground = "#CCCCCC",
+                        highlightcolor = "WHITE",
+                        height = 2,
+                        width = 20,
+                        cursor = "hand1",
+                        text="Return to Team Select", command = lambda: ReturnSelect(archerwindow))
+    homebutton.place(x=190, y=350)
+
+    #SAME AS ValePlayers, JUST DIFFERENT TEAM
+
+#--------------------------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------------------
+
+def SaintsPlayers():
+    tswindow.destroy()
+    saintwindow = Tk()
+    saintwindow.title("Team Select")
+    saintwindow.geometry("550x650+{}+{}".format(saintwindow.winfo_x() + 600, saintwindow.winfo_y() + 200))
+    saintwindow.configure(bg="#CCCCCC")
+    saintwindow.resizable(0,0)
+    frame = Frame(saintwindow, bg="#856FF8", highlightbackground="black", highlightthickness=2, height=150, width=550)
+    frame.place(x=0, y=0)
+    
+    f = font.Font(size=20)
+    
+    header = Label(frame, text="Saints")
+    header["font"] = f
+    header.place(x=100, y=50)
+    header.configure(bg="#856FF8")
+
+    
+    global playerdropdown
+
+    players = []
+    with open("PlayerList.txt", 'r') as f:
+        for line in f:
+            if "Saints" in line:
+                players.append(line.split("|")[1].strip())
+
+    playerdropdown = ttk.Combobox(saintwindow, values=players)
+    playerdropdown.place(x=215, y=240)
+    sp_label = Label(saintwindow, text="Select a Player:")
+    sp_label.place(x=125, y=240)
+    sp_label.configure(bg="#CCCCCC")
+
+    spbutton = Button(saintwindow,
+                        background = "#CCCCCC",
+                        foreground = "BLACK",
+                        activebackground = "#856FF8",
+                        highlightthickness = 2,
+                        highlightbackground = "#CCCCCC",
+                        highlightcolor = "WHITE",
+                        height = 2,
+                        width = 20,
+                        cursor = "hand1",
+                      text="Confirm", command=ValidatePlayerSelect)
+    spbutton.place(x=190, y=300)
+
+    homebutton = Button(saintwindow,
+                        background = "#CCCCCC",
+                        foreground = "BLACK",
+                        activebackground = "#856FF8",
+                        highlightthickness = 2,
+                        highlightbackground = "#CCCCCC",
+                        highlightcolor = "WHITE",
+                        height = 2,
+                        width = 20,
+                        cursor = "hand1",
+                        text="Return to Team Select", command = lambda: ReturnSelect(saintwindow))
+    homebutton.place(x=190, y=350)
+
+    #SAME AS ValePlayers, JUST DIFFERENT TEAM
+
+#--------------------------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------------------
+
+def CobrasPlayers():
+    tswindow.destroy()
+
+    cobrawindow = Tk()
+    cobrawindow.title("Team Select")
+    cobrawindow.geometry("550x650+{}+{}".format(cobrawindow.winfo_x() + 600, cobrawindow.winfo_y() + 200))
+    cobrawindow.configure(bg="#CCCCCC")
+    cobrawindow.resizable(0,0)
+    frame = Frame(cobrawindow, bg="#856FF8", highlightbackground="black", highlightthickness=2, height=150, width=550)
+    frame.place(x=0, y=0)
+    
+    f = font.Font(size=20)
+    
+    header = Label(frame, text="Caerphilly Cobra's")
+    header["font"] = f
+    header.place(x=100, y=50)
+    header.configure(bg="#856FF8")
+
+    
+    global playerdropdown
+
+    players = []
+    with open("PlayerList.txt", 'r') as f:
+        for line in f:
+            if "Caerphilly Cobra's" in line:
+                players.append(line.split("|")[1].strip())
+
+    playerdropdown = ttk.Combobox(cobrawindow, values=players)
+    playerdropdown.place(x=215, y=240)
+    cp_label = Label(cobrawindow, text="Select a Player:")
+    cp_label.place(x=125, y=240)
+    cp_label.configure(bg="#CCCCCC")
+
+    cpbutton = Button(cobrawindow,
+                    background = "#CCCCCC",
+                    foreground = "BLACK",
+                    activebackground = "#856FF8",
+                    highlightthickness = 2,
+                    highlightbackground = "#CCCCCC",
+                    highlightcolor = "WHITE",
+                    height = 2,
+                    width = 20,
+                    cursor = "hand1",
+                      text="Confirm", command=ValidatePlayerSelect)
+    cpbutton.place(x=190, y=300)
+
+    homebutton = Button(cobrawindow,
+                        background = "#CCCCCC",
+                        foreground = "BLACK",
+                        activebackground = "#856FF8",
+                        highlightthickness = 2,
+                        highlightbackground = "#CCCCCC",
+                        highlightcolor = "WHITE",
+                        height = 2,
+                        width = 20,
+                        cursor = "hand1",
+                        text="Return to Team Select", command = lambda: ReturnSelect(cobrawindow))
+    homebutton.place(x=190, y=350)
+
+    #SAME AS ValePlayers, JUST DIFFERENT TEAM
+
+#--------------------------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------------------
+
+def PontyPlayers():
+    tswindow.destroy()
+    pontywindow = Tk()
+    pontywindow.title("Team Select")
+    pontywindow.geometry("550x650+{}+{}".format(pontywindow.winfo_x() + 600, pontywindow.winfo_y() + 200))
+    pontywindow.configure(bg="#CCCCCC")
+    pontywindow.resizable(0,0)
+    frame = Frame(pontywindow, bg="#856FF8", highlightbackground="black", highlightthickness=2, height=150, width=550)
+    frame.place(x=0, y=0)
+    
+    f = font.Font(size=20)
+    
+    header = Label(frame, text="Ponty Panthers")
+    header["font"] = f
+    header.place(x=100, y=50)
+    header.configure(bg="#856FF8")
+
+    
+    global playerdropdown
+
+    players = []
+    with open("PlayerList.txt", 'r') as f:
+        for line in f:
+            if "Ponty Panthers" in line:
+                players.append(line.split("|")[1].strip())
+
+    playerdropdown = ttk.Combobox(pontywindow, values=players)
+    playerdropdown.place(x=215, y=240)
+    pp_label = Label(pontywindow, text="Select a Player:")
+    pp_label.place(x=125, y=240)
+    pp_label.configure(bg="#CCCCCC")
+
+    ppbutton = Button(pontywindow,
+                    background = "#CCCCCC",
+                    foreground = "BLACK",
+                    activebackground = "#856FF8",
+                    highlightthickness = 2,
+                    highlightbackground = "#CCCCCC",
+                    highlightcolor = "WHITE",
+                    height = 2,
+                    width = 20,
+                    cursor = "hand1",
+                      text="Confirm", command=ValidatePlayerSelect)
+    ppbutton.place(x=190, y=300)
+
+    homebutton = Button(pontywindow,
+                        background = "#CCCCCC",
+                        foreground = "BLACK",
+                        activebackground = "#856FF8",
+                        highlightthickness = 2,
+                        highlightbackground = "#CCCCCC",
+                        highlightcolor = "WHITE",
+                        height = 2,
+                        width = 20,
+                        cursor = "hand1",
+                        text="Return to Team Select", command = lambda: ReturnSelect(pontywindow))
+    homebutton.place(x=190, y=350)
+
+    #SAME AS ValePlayers, JUST DIFFERENT TEAM
+
+#--------------------------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------------------
+
+def TribalPlayers():
+    tswindow.destroy()
+    tribalwindow = Tk()
+    tribalwindow.title("Team Select")
+    tribalwindow.geometry("550x650+{}+{}".format(tribalwindow.winfo_x() + 600, tribalwindow.winfo_y() + 200))
+    tribalwindow.configure(bg="#CCCCCC")
+    tribalwindow.resizable(0,0)
+    frame = Frame(tribalwindow, bg="#856FF8", highlightbackground="black", highlightthickness=2, height=150, width=550)
+    frame.place(x=0, y=0)
+    
+    f = font.Font(size=20)
+    
+    header = Label(frame, text="Tribal Hunters")
+    header["font"] = f
+    header.place(x=100, y=50)
+    header.configure(bg="#856FF8")
+
+    
+    global playerdropdown
+
+    players = []
+    with open("PlayerList.txt", 'r') as f:
+        for line in f:
+            if "Tribal Hunters" in line:
+                players.append(line.split("|")[1].strip())
+
+    playerdropdown = ttk.Combobox(tribalwindow, values=players)
+    playerdropdown.place(x=215, y=240)
+    tp_label = Label(tribalwindow, text="Select a Player:")
+    tp_label.place(x=125, y=240)
+    tp_label.configure(bg="#CCCCCC")
+
+    tpbutton = Button(tribalwindow,
+                    background = "#CCCCCC",
+                    foreground = "BLACK",
+                    activebackground = "#856FF8",
+                    highlightthickness = 2,
+                    highlightbackground = "#CCCCCC",
+                    highlightcolor = "WHITE",
+                    height = 2,
+                    width = 20,
+                    cursor = "hand1",
+
+                      text="Confirm", command=ValidatePlayerSelect)
+    tpbutton.place(x=190, y=300)
+
+    homebutton = Button(tribalwindow,
+                        background = "#CCCCCC",
+                        foreground = "BLACK",
+                        activebackground = "#856FF8",
+                        highlightthickness = 2,
+                        highlightbackground = "#CCCCCC",
+                        highlightcolor = "WHITE",
+                        height = 2,
+                        width = 20,
+                        cursor = "hand1",
+                        text="Return to Team Select", command = lambda: ReturnSelect(tribalwindow))
+    homebutton.place(x=190, y=350)
+
+    #SAME AS ValePlayers, JUST DIFFERENT TEAM
+
+#--------------------------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------------------
+
+def BristolPlayers():
+    tswindow.destroy()
+    bristolwindow = Tk()
+    bristolwindow.title("Team Select")
+    bristolwindow.geometry("550x650+{}+{}".format(bristolwindow.winfo_x() + 600, bristolwindow.winfo_y() + 200))
+    bristolwindow.configure(bg="#CCCCCC")
+    bristolwindow.resizable(0,0)
+    frame = Frame(bristolwindow, bg="#856FF8", highlightbackground="black", highlightthickness=2, height=150, width=550)
+    frame.place(x=0, y=0)
+    
+    f = font.Font(size=20)
+    
+    header = Label(frame, text="Bristol Flyers")
+    header["font"] = f
+    header.place(x=100, y=50)
+    header.configure(bg="#856FF8")
+
+    
+    global playerdropdown
+
+    players = []
+    with open("PlayerList.txt", 'r') as f:
+        for line in f:
+            if "Bristol Flyers" in line:
+                players.append(line.split("|")[1].strip())
+
+    playerdropdown = ttk.Combobox(bristolwindow, values=players)
+    playerdropdown.place(x=215, y=240)
+    bp_label = Label(bristolwindow, text="Select a Player:")
+    bp_label.place(x=125, y=240)
+    bp_label.configure(bg="#CCCCCC")
+
+    vpbutton = Button(bristolwindow,
+                    background = "#CCCCCC",
+                    foreground = "BLACK",
+                    activebackground = "#856FF8",
+                    highlightthickness = 2,
+                    highlightbackground = "#CCCCCC",
+                    highlightcolor = "WHITE",
+                    height = 2,
+                    width = 20,
+                    cursor = "hand1",
+                      text="Confirm", command=ValidatePlayerSelect)
+    vpbutton.place(x=190, y=300)
+
+    homebutton = Button(bristolwindow,
+                        background = "#CCCCCC",
+                        foreground = "BLACK",
+                        activebackground = "#856FF8",
+                        highlightthickness = 2,
+                        highlightbackground = "#CCCCCC",
+                        highlightcolor = "WHITE",
+                        height = 2,
+                        width = 20,
+                        cursor = "hand1",
+                        text="Return to Team Select", command = lambda: ReturnSelect(bristolwindow))
+    homebutton.place(x=190, y=350)
+
+    #SAME AS ValePlayers, JUST DIFFERENT TEAM
+
+#--------------------------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------------------
+
+def SapatPlayers():
+    tswindow.destroy()
+    sapatwindow = Tk()
+    sapatwindow.title("Team Select")
+    sapatwindow.geometry("550x650+{}+{}".format(sapatwindow.winfo_x() + 600, sapatwindow.winfo_y() + 200))
+    sapatwindow.configure(bg="#CCCCCC")
+    sapatwindow.resizable(0,0)
+    frame = Frame(sapatwindow, bg="#856FF8", highlightbackground="black", highlightthickness=2, height=150, width=550)
+    frame.place(x=0, y=0)
+    
+    f = font.Font(size=20)
+    
+    header = Label(frame, text="Sapat Lang")
+    header["font"] = f
+    header.place(x=100, y=50)
+    header.configure(bg="#856FF8")
+
+    
+    global playerdropdown
+
+    players = []
+    with open("PlayerList.txt", 'r') as f:
+        for line in f:
+            if "Sapat Lang" in line:
+                players.append(line.split("|")[1].strip())
+
+    playerdropdown = ttk.Combobox(sapatwindow, values=players)
+    playerdropdown.place(x=215, y=240)
+    sp_label = Label(sapatwindow, text="Select a Player:")
+    sp_label.place(x=125, y=240)
+    sp_label.configure(bg="#CCCCCC")
+
+    spbutton = Button(sapatwindow,
+                    background = "#CCCCCC",
+                    foreground = "BLACK",
+                    activebackground = "#856FF8",
+                    highlightthickness = 2,
+                    highlightbackground = "#CCCCCC",
+                    highlightcolor = "WHITE",
+                    height = 2,
+                    width = 20,
+                    cursor = "hand1",
+                      text="Confirm", command=ValidatePlayerSelect)
+    spbutton.place(x=190, y=300)
+
+    homebutton = Button(sapatwindow,
+                        background = "#CCCCCC",
+                        foreground = "BLACK",
+                        activebackground = "#856FF8",
+                        highlightthickness = 2,
+                        highlightbackground = "#CCCCCC",
+                        highlightcolor = "WHITE",
+                        height = 2,
+                        width = 20,
+                        cursor = "hand1",
+                        text="Return to Team Select", command = lambda: ReturnSelect(sapatwindow))
+    homebutton.place(x=190, y=350)
+
+    #SAME AS ValePlayers, JUST DIFFERENT TEAM
+
+#--------------------------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------------------
+
+def ValePlayersAdd():
+    valeaddwindow = Tk()
+    valeaddwindow.title("Team Select")
+    valeaddwindow.geometry("550x650+{}+{}".format(valeaddwindow.winfo_x() + 600, valeaddwindow.winfo_y() + 200))
+    valeaddwindow.configure(bg = "#CCCCCC")
+    valeaddwindow.resizable(0,0)
+    frame = Frame(valeaddwindow, bg = "#856FF8", highlightbackground = "black", highlightthickness = 2, height = 150, width = 550)
+    frame.place(x = 0, y = 0)
+    
+    f = font.Font(size=20)
+    
+    header = Label(frame, text = "Vale Vipers")
+    header["font"] = f
+    header.place(x = 100, y = 50)
+    header.configure(bg = "#856FF8")
+
+
+    
+    vale_name_player = Entry(valeaddwindow)
+    vale_name_player.place(x = 215, y = 200)
+    vale_name_label = Label(valeaddwindow, text = "Player Name:")
+    vale_name_label.place(x = 125, y = 200)
+    vale_name_label.configure(bg = "#CCCCCC")
+
+    #entry box for new players name
+    
+    def on_button_click():
+        global vale_name_player_entry
+        vale_name_player_entry = vale_name_player.get()
+        AddPlayerCalc(vale_name_player_entry)
+
+        #runs addplayer calc with the name as a parameter
+
+    vpbutton = Button(valeaddwindow,
+                    background = "#CCCCCC",
+                    foreground = "BLACK",
+                    activebackground = "#856FF8",
+                    highlightthickness = 2,
+                    highlightbackground = "#CCCCCC",
+                    highlightcolor = "WHITE",
+                    height = 2,
+                    width = 20,
+                    cursor = "hand1",
+                      text="Confirm", command=on_button_click)
+    vpbutton.place(x=190, y=250)
+
+    tsbutton = Button(valeaddwindow,
+                    background = "#CCCCCC",
+                    foreground = "BLACK",
+                    activebackground = "#856FF8",
+                    highlightthickness = 2,
+                    highlightbackground = "#CCCCCC",
+                    highlightcolor = "WHITE",
+                    height = 2,
+                    width = 20,
+                    cursor = "hand1",
+                      text="Return to Team Select", command = lambda: ReturnSelect(valeaddwindow))
+    tsbutton.place(x=190, y=300)
+
+    #one button is to ocnfirm the name (save it), other is to return home
+
+
+#--------------------------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------------------
+
+def ArchersPlayersAdd():
+    archeraddwindow = Tk()
+    archeraddwindow.title("Team Select")
+    archeraddwindow.geometry("550x650+{}+{}".format(archeraddwindow.winfo_x() + 600, archeraddwindow.winfo_y() + 200))
+    archeraddwindow.configure(bg = "#CCCCCC")
+    archeraddwindow.resizable(0,0)
+    frame = Frame(archeraddwindow, bg = "#856FF8", highlightbackground = "black", highlightthickness = 2, height = 150, width = 550)
+    frame.place(x = 0, y = 0)
+    
+    f = font.Font(size=20)
+    
+    header = Label(frame, text = "Cardiff Archers")
+    header["font"] = f
+    header.place(x = 100, y = 50)
+    header.configure(bg = "#856FF8")
+
+
+    
+    archer_name_player = Entry(archeraddwindow)
+    archer_name_player.place(x = 215, y = 200)
+    archer_name_label = Label(archeraddwindow, text = "Player Name:")
+    archer_name_label.place(x = 125, y = 200)
+    archer_name_label.configure(bg = "#CCCCCC")
+    
+    def on_button_click():
+        global archer_name_player_entry
+        archer_name_player_entry = archer_name_player.get()
+        AddPlayerCalc(archer_name_player_entry)
+
+    apbutton = Button(archeraddwindow,
+                    background = "#CCCCCC",
+                    foreground = "BLACK",
+                    activebackground = "#856FF8",
+                    highlightthickness = 2,
+                    highlightbackground = "#CCCCCC",
+                    highlightcolor = "WHITE",
+                    height = 2,
+                    width = 20,
+                    cursor = "hand1",
+                      text="Confirm", command=on_button_click)
+    apbutton.place(x=190, y=250)
+
+    tsbutton = Button(archeraddwindow,
+                    background = "#CCCCCC",
+                    foreground = "BLACK",
+                    activebackground = "#856FF8",
+                    highlightthickness = 2,
+                    highlightbackground = "#CCCCCC",
+                    highlightcolor = "WHITE",
+                    height = 2,
+                    width = 20,
+                    cursor = "hand1",
+                      text="Return to Team Select", command = lambda: ReturnSelect(archeraddwindow))
+    tsbutton.place(x=190, y=300)
+
+    #SAME AS ValePlayersAdd JUST FOR A DIFFERENT TEAM
+
+
+#--------------------------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------------------
+
+def SaintsPlayersAdd():
+    saintaddwindow = Tk()
+    saintaddwindow.title("Team Select")
+    saintaddwindow.geometry("550x650+{}+{}".format(saintaddwindow.winfo_x() + 600, saintaddwindow.winfo_y() + 200))
+    saintaddwindow.configure(bg = "#CCCCCC")
+    saintaddwindow.resizable(0,0)
+    frame = Frame(saintaddwindow, bg = "#856FF8", highlightbackground = "black", highlightthickness = 2, height = 150, width = 550)
+    frame.place(x = 0, y = 0)
+    
+    f = font.Font(size=20)
+    
+    header = Label(frame, text = "Saints")
+    header["font"] = f
+    header.place(x = 100, y = 50)
+    header.configure(bg = "#856FF8")
+
+    
+    saint_name_player = Entry(saintaddwindow)
+    saint_name_player.place(x = 215, y = 200)
+    saint_name_label = Label(saintaddwindow, text = "Player Name:")
+    saint_name_label.place(x = 125, y = 200)
+    saint_name_label.configure(bg = "#CCCCCC")
+    
+    def on_button_click():
+        global saint_name_player_entry
+        saint_name_player_entry = saint_name_player.get()
+        AddPlayerCalc(saint_name_player_entry)
+
+    spbutton = Button(saintaddwindow,
+                    background = "#CCCCCC",
+                    foreground = "BLACK",
+                    activebackground = "#856FF8",
+                    highlightthickness = 2,
+                    highlightbackground = "#CCCCCC",
+                    highlightcolor = "WHITE",
+                    height = 2,
+                    width = 20,
+                    cursor = "hand1",
+                      text="Confirm", command=on_button_click)
+    spbutton.place(x=190, y=250)
+
+    tsbutton = Button(saintaddwindow,
+                    background = "#CCCCCC",
+                    foreground = "BLACK",
+                    activebackground = "#856FF8",
+                    highlightthickness = 2,
+                    highlightbackground = "#CCCCCC",
+                    highlightcolor = "WHITE",
+                    height = 2,
+                    width = 20,
+                    cursor = "hand1",
+                      text="Return to Team Select", command = lambda: ReturnSelect(saintaddwindow))
+    tsbutton.place(x=190, y=300)
+
+    #SAME AS ValePlayersAdd JUST FOR A DIFFERENT TEAM
+
+#--------------------------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------------------
+
+def CobrasPlayersAdd():
+    cobraaddwindow = Tk()
+    cobraaddwindow.title("Team Select")
+    cobraaddwindow.geometry("550x650+{}+{}".format(cobraaddwindow.winfo_x() + 600, cobraaddwindow.winfo_y() + 200))
+    cobraaddwindow.configure(bg = "#CCCCCC")
+    cobraaddwindow.resizable(0,0)
+    frame = Frame(cobraaddwindow, bg = "#856FF8", highlightbackground = "black", highlightthickness = 2, height = 150, width = 550)
+    frame.place(x = 0, y = 0)
+    
+    f = font.Font(size=20)
+    
+    header = Label(frame, text = "Caerphilly Cobra's")
+    header["font"] = f
+    header.place(x = 100, y = 50)
+    header.configure(bg = "#856FF8")
+
+
+    
+    cobra_name_player = Entry(cobraaddwindow)
+    cobra_name_player.place(x = 215, y = 200)
+    cobra_name_label = Label(cobraaddwindow, text = "Player Name:")
+    cobra_name_label.place(x = 125, y = 200)
+    cobra_name_label.configure(bg = "#CCCCCC")
+    
+    def on_button_click():
+        global cobra_name_player_entry
+        cobra_name_player_entry = cobra_name_player.get()
+        AddPlayerCalc(cobra_name_player_entry)
+
+    ccpbutton = Button(cobraaddwindow,
+                    background = "#CCCCCC",
+                    foreground = "BLACK",
+                    activebackground = "#856FF8",
+                    highlightthickness = 2,
+                    highlightbackground = "#CCCCCC",
+                    highlightcolor = "WHITE",
+                    height = 2,
+                    width = 20,
+                    cursor = "hand1",
+                       text="Confirm", command=on_button_click)
+    ccpbutton.place(x=190, y=250)
+
+    tsbutton = Button(cobraaddwindow,
+                    background = "#CCCCCC",
+                    foreground = "BLACK",
+                    activebackground = "#856FF8",
+                    highlightthickness = 2,
+                    highlightbackground = "#CCCCCC",
+                    highlightcolor = "WHITE",
+                    height = 2,
+                    width = 20,
+                    cursor = "hand1",
+                      text="Return to Team Select", command = lambda: ReturnSelect(cobraaddwindow))
+    tsbutton.place(x=190, y=300)
+
+    #SAME AS ValePlayersAdd JUST FOR A DIFFERENT TEAM
+
+#--------------------------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------------------
+
+def PontyPlayersAdd():
+    pontyaddwindow = Tk()
+    pontyaddwindow.title("Team Select")
+    pontyaddwindow.geometry("550x650+{}+{}".format(pontyaddwindow.winfo_x() + 600, pontyaddwindow.winfo_y() + 200))
+    pontyaddwindow.configure(bg = "#CCCCCC")
+    pontyaddwindow.resizable(0,0)
+    frame = Frame(pontyaddwindow, bg = "#856FF8", highlightbackground = "black", highlightthickness = 2, height = 150, width = 550)
+    frame.place(x = 0, y = 0)
+    
+    f = font.Font(size=20)
+    
+    header = Label(frame, text = "Ponty")
+    header["font"] = f
+    header.place(x = 100, y = 50)
+    header.configure(bg = "#856FF8")
+
+
+    
+    ponty_name_player = Entry(pontyaddwindow)
+    ponty_name_player.place(x = 215, y = 200)
+    ponty_name_label = Label(pontyaddwindow, text = "Player Name:")
+    ponty_name_label.place(x = 125, y = 200)
+    ponty_name_label.configure(bg = "#CCCCCC")
+    
+    def on_button_click():
+        global ponty_name_player_entry
+        ponty_name_player_entry = ponty_name_player.get()
+        AddPlayerCalc(ponty_name_player_entry)
+
+    pppbutton = Button(pontyaddwindow,
+                    background = "#CCCCCC",
+                    foreground = "BLACK",
+                    activebackground = "#856FF8",
+                    highlightthickness = 2,
+                    highlightbackground = "#CCCCCC",
+                    highlightcolor = "WHITE",
+                    height = 2,
+                    width = 20,
+                    cursor = "hand1",
+                       text="Confirm", command=on_button_click)
+    pppbutton.place(x=190, y=250)
+
+    tsbutton = Button(pontyaddwindow,
+                    background = "#CCCCCC",
+                    foreground = "BLACK",
+                    activebackground = "#856FF8",
+                    highlightthickness = 2,
+                    highlightbackground = "#CCCCCC",
+                    highlightcolor = "WHITE",
+                    height = 2,
+                    width = 20,
+                    cursor = "hand1",
+                      text="Return to Team Select", command = lambda: ReturnSelect(pontyaddwindow))
+    tsbutton.place(x=190, y=300)
+
+    #SAME AS ValePlayersAdd JUST FOR A DIFFERENT TEAM
+
+#--------------------------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------------------
+
+def TribalPlayersAdd():
+    tribaladdwindow = Tk()
+    tribaladdwindow.title("Team Select")
+    tribaladdwindow.geometry("550x650+{}+{}".format(tribaladdwindow.winfo_x() + 600, tribaladdwindow.winfo_y() + 200))
+    tribaladdwindow.configure(bg = "#CCCCCC")
+    tribaladdwindow.resizable(0,0)
+    frame = Frame(tribaladdwindow, bg = "#856FF8", highlightbackground = "black", highlightthickness = 2, height = 150, width = 550)
+    frame.place(x = 0, y = 0)
+    
+    f = font.Font(size=20)
+    
+    header = Label(frame, text = "Tribal Hunters")
+    header["font"] = f
+    header.place(x = 100, y = 50)
+    header.configure(bg = "#856FF8")
+
+
+    
+    tribal_name_player = Entry(tribaladdwindow)
+    tribal_name_player.place(x = 215, y = 200)
+    tribal_name_label = Label(tribaladdwindow, text = "Player Name:")
+    tribal_name_label.place(x = 125, y = 200)
+    tribal_name_label.configure(bg = "#CCCCCC")
+    
+    def on_button_click():
+        global tribal_name_player_entry
+        tribal_name_player_entry = tribal_name_player.get()
+        AddPlayerCalc(tribal_name_player_entry)
+
+    thpbutton = Button(tribaladdwindow,
+                    background = "#CCCCCC",
+                    foreground = "BLACK",
+                    activebackground = "#856FF8",
+                    highlightthickness = 2,
+                    highlightbackground = "#CCCCCC",
+                    highlightcolor = "WHITE",
+                    height = 2,
+                    width = 20,
+                    cursor = "hand1",
+                       text="Confirm", command=on_button_click)
+    thpbutton.place(x=215, y=250)
+
+    tsbutton = Button(tribaladdwindow,
+                    background = "#CCCCCC",
+                    foreground = "BLACK",
+                    activebackground = "#856FF8",
+                    highlightthickness = 2,
+                    highlightbackground = "#CCCCCC",
+                    highlightcolor = "WHITE",
+                    height = 2,
+                    width = 20,
+                    cursor = "hand1",
+                      text="Return to Team Select", command = lambda: ReturnSelect(tribaladdwindow))
+    tsbutton.place(x=190, y=300)
+
+    #SAME AS ValePlayersAdd JUST FOR A DIFFERENT TEAM
+
+#--------------------------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------------------
+
+def BristolPlayersAdd():
+    bristoladdwindow = Tk()
+    bristoladdwindow.title("Team Select")
+    bristoladdwindow.geometry("550x650+{}+{}".format(bristoladdwindow.winfo_x() + 600, bristoladdwindow.winfo_y() + 200))
+    bristoladdwindow.configure(bg = "#CCCCCC")
+    bristoladdwindow.resizable(0,0)
+    frame = Frame(bristoladdwindow, bg = "#856FF8", highlightbackground = "black", highlightthickness = 2, height = 150, width = 550)
+    frame.place(x = 0, y = 0)
+    
+    f = font.Font(size=20)
+    
+    header = Label(frame, text = "Bristol Flyers")
+    header["font"] = f
+    header.place(x = 100, y = 50)
+    header.configure(bg = "#856FF8")
+
+    
+    bristol_name_player = Entry(bristoladdwindow)
+    bristol_name_player.place(x = 215, y = 200)
+    bristol_name_label = Label(bristoladdwindow, text = "Player Name:")
+    bristol_name_label.place(x = 125, y = 200)
+    bristol_name_label.configure(bg = "#CCCCCC")
+
+    
+    def on_button_click():
+        global bristol_name_player_entry
+        bristol_name_player_entry = bristol_name_player.get()
+        AddPlayerCalc(bristol_name_player_entry)
+
+    bfpbutton = Button(bristoladdwindow,
+                    background = "#CCCCCC",
+                    foreground = "BLACK",
+                    activebackground = "#856FF8",
+                    highlightthickness = 2,
+                    highlightbackground = "#CCCCCC",
+                    highlightcolor = "WHITE",
+                    height = 2,
+                    width = 20,
+                    cursor = "hand1",
+                       text="Confirm", command=on_button_click)
+    bfpbutton.place(x=190, y=250)
+
+    tsbutton = Button(bristoladdwindow,
+                    background = "#CCCCCC",
+                    foreground = "BLACK",
+                    activebackground = "#856FF8",
+                    highlightthickness = 2,
+                    highlightbackground = "#CCCCCC",
+                    highlightcolor = "WHITE",
+                    height = 2,
+                    width = 20,
+                    cursor = "hand1",
+                      text="Return to Team Select", command = lambda: ReturnSelect(bristoladdwindow))
+    tsbutton.place(x=190, y=300)
+
+    #SAME AS ValePlayersAdd JUST FOR A DIFFERENT TEAM
+
+#--------------------------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------------------
+
+def SapatPlayersAdd():
+    sapataddwindow = Tk()
+    sapataddwindow.title("Team Select")
+    sapataddwindow.geometry("550x650+{}+{}".format(sapataddwindow.winfo_x() + 600, sapataddwindow.winfo_y() + 200))
+    sapataddwindow.configure(bg = "#CCCCCC")
+    sapataddwindow.resizable(0,0)
+    frame = Frame(sapataddwindow, bg = "#856FF8", highlightbackground = "black", highlightthickness = 2, height = 150, width = 550)
+    frame.place(x = 0, y = 0)
+    
+    f = font.Font(size=20)
+    
+    header = Label(frame, text = "Sapat Lang")
+    header["font"] = f
+    header.place(x = 100, y = 50)
+    header.configure(bg = "#856FF8")
+
+    
+    sapat_name_player = Entry(sapataddwindow)
+    sapat_name_player.place(x = 215, y = 200)
+    sapat_name_label = Label(sapataddwindow, text = "Player Name:")
+    sapat_name_label.place(x = 125, y = 200)
+    sapat_name_label.configure(bg = "#CCCCCC")
+
+    
+    def on_button_click():
+        global sapat_name_player_entry
+        sapat_name_player_entry = sapat_name_player.get()
+        AddPlayerCalc(sapat_name_player_entry)
+
+    slpbutton = Button(sapataddwindow,
+                    background = "#CCCCCC",
+                    foreground = "BLACK",
+                    activebackground = "#856FF8",
+                    highlightthickness = 2,
+                    highlightbackground = "#CCCCCC",
+                    highlightcolor = "WHITE",
+                    height = 2,
+                    width = 20,
+                    cursor = "hand1",
+                       text="Confirm", command=on_button_click)
+    slpbutton.place(x=190, y=250)
+
+    tsbutton = Button(sapataddwindow,
+                    background = "#CCCCCC",
+                    foreground = "BLACK",
+                    activebackground = "#856FF8",
+                    highlightthickness = 2,
+                    highlightbackground = "#CCCCCC",
+                    highlightcolor = "WHITE",
+                    height = 2,
+                    width = 20,
+                    cursor = "hand1",
+                      text="Return to Team Select", command = lambda: ReturnSelect(sapataddwindow))
+    tsbutton.place(x=190, y=300)
+
+    #SAME AS ValePlayersAdd JUST FOR A DIFFERENT TEAM
+
+
+#--------------------------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------------------
+
+def WrongLogin():
+    messagebox.showerror("Error", "Please ensure you have entered the correct login details") #subroutine created so that when a user gets a login wrong, they are given a message box
+
+FirstMenu() #first actual line of code that is run, this starts the programme on the first menu.
