@@ -1,0 +1,16 @@
+001|Luca Malfatti|Vale Vipers
+002|Deekie Brooks|Vale Vipers
+003|LeBron James|Cardiff Archers
+004|Jilord Ricalde|Vale Vipers
+005|Alonzo Rosario|Cardiff Archers
+006|Ravin E|Cardiff Archers
+007|David Wells|Saints
+008|Tito Roli|Sapat Lang
+009|Nefe|Vale Vipers
+010|James Shi|Sapat Lang
+011|Kyrie irbing|Caerphilly Cobras
+012|kebin durant|Bristol Flyers
+013|jack millar|Caerphilly Cobras
+014|Theon Gagan|Vale Vipers
+015|kevin chiduku|Saints
+016|Antonio Morales|Saints
